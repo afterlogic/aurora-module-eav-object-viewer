@@ -18,9 +18,10 @@
 		this.selectItem = _.bind(this.selectItem, this);
 		this.checkItem = _.bind(this.checkItem, this);
 		this.checkItem = _.bind(this.checkItem, this);
-		this.onEditResponse = _.bind(this.onEditResponse, this);
 		
-		this.postEdit = _.bind(this.postEdit, this);
+		this.postForm = _.bind(this.postForm, this);
+		this.onPostResponse = _.bind(this.onPostResponse, this);
+		
 		
 		this.init();
 	}
@@ -49,6 +50,11 @@
 			this.objectsList(_.map(aData, function (oItem) {
 				return _.values(oItem);
 			}));
+		}
+		else
+		{
+			this.propsList([]);
+			this.objectsList([]);
 		}
 	};
 	
@@ -137,7 +143,7 @@
 		}
 	};
 	
-	CScreen.prototype.postEdit = function (aItemData, oEvent)
+	CScreen.prototype.postForm = function (aItemData, oEvent)
 	{
 		var 
 			self = this,
@@ -160,12 +166,12 @@
 			context: this,
 			type: 'POST',
 			data: oRequest,
-			complete: self.onEditResponse,
+			complete: self.onPostResponse,
 			timeout: 1000
 		});
 	};
 	
-	CScreen.prototype.onEditResponse = function (jqXHR, textStatus) {
+	CScreen.prototype.onPostResponse = function (jqXHR, textStatus) {
 		console.log('response', jqXHR, textStatus);
 		if (textStatus === "success")
 		{

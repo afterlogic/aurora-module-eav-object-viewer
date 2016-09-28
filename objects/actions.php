@@ -54,9 +54,6 @@ switch ($_POST['action'])
 		break;
 	
 	case 'edit':
-	
-
-	
 		if ($_POST['ObjectName'])
 		{
 			$sObjectType = $_POST['ObjectName'];
@@ -96,7 +93,15 @@ switch ($_POST['action'])
 			$aIds = explode(',', $_POST['ids']);
 		}
 		foreach ($aIds as $id) {
-			$oManagerApi->deleteEntity((int)$id);
+			if (!$oManagerApi->deleteEntity((int)$id))
+			{
+				$result = false;
+			}
+		}
+		
+		if ($result) {
+			$response['error'] = false;
+			$response['message'] = '';
 		}
 		break;
 }

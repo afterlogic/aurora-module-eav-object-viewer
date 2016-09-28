@@ -17,7 +17,7 @@
  */
 ?>
 <!--<button data-bind="click: reset" class="btn btn-default">Reset</button>-->
-<div data-bind="with: propsList">
+<?php if (false) { ?><div data-bind="with: propsList">
 	<label>Create item</label>
 	<form method="POST">
 		<input type="hidden" name="ObjectName" data-bind="value: $parent.selectedObjectName"/>
@@ -42,7 +42,7 @@
 		</div>
 		<input type="submit" value="Create" class="btn btn-danger" />
 	</form>
-</div>
+</div><?php } ?>
 
 <div data-bind="with: selectedItem">
 	<br />
@@ -69,7 +69,7 @@
 				</tr>
 			</table>
 		</div>
-		<input type="submit" value="Update" class="btn btn-danger" data-bind="click: $parent.postEdit" />
+		<input type="submit" value="Update" class="btn btn-danger" data-bind="click: $parent.postForm" />
 	</form>
 </div>
 <!--<div data-bind="with: selectedItem">
@@ -93,6 +93,6 @@
 		<input type="hidden" name="action" value="delete_multiple" />
 		<input type="hidden" name="ids" data-bind="textInput: $parent.checkedItems().join(',');" />
 
-		<input type="submit" value="Delete" class="btn btn-danger" data-bind="value: 'Delete: '+ $parent.checkedItems().join(', ');" />
+		<input type="submit" value="Delete" class="btn btn-danger" data-bind="click: $parent.postForm, value: 'Delete: '+ $parent.checkedItems().join(', ');" />
 	</form>
 </div>
