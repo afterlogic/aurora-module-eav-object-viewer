@@ -67,5 +67,5 @@
 		//	document.cookie = "OBJECT_TAB="+index;
 		//});
 </script>
-<script src="objects/objects.js"></script>
+<script src="modules/EavObjectViewer/objects/objects.js"></script>
 

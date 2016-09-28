@@ -25,8 +25,8 @@
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="https://yastatic.net/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 	
-    <script src="<?php echo $sBaseUrl; ?>../node_modules/underscore/underscore-min.js"></script>
-    <script src="<?php echo $sBaseUrl; ?>../node_modules/knockout/build/output/knockout-latest.js"></script>
+    <script src="node_modules/underscore/underscore-min.js"></script>
+    <script src="node_modules/knockout/build/output/knockout-latest.js"></script>
     <script>
 		var staticData = {};
 	</script>
@@ -36,90 +36,21 @@
 		<div class="row">
 			<div class="col-sm-8">
 				<div class="page-header">
-					<h1>Test panel<small>beta 0.1</small></h1>
+					<h1>EAV objects viewer <small>beta 0.1</small></h1>
 				</div>
-			</div>
-			<div class="col-sm-4">
-				<?php include "login_form.php"; ?>
 			</div>
 		</div>
 		<!-- Nav tabs -->
 		<ul id="myTabs" class="nav nav-tabs" role="tablist">
-			<li role="presentation" class="<?php echo $iStoredTab === 0 ? 'active' : ''?>"><a href="#ajax" aria-controls="ajax" role="tab" data-toggle="tab">Ajax</a></li>
-			<li role="presentation" class="<?php echo $iStoredTab === 1 ? 'active' : ''?>"><a href="#channels" aria-controls="channels" role="tab" data-toggle="tab">Channels</a></li>
-			<li role="presentation" class="<?php echo $iStoredTab === 2 ? 'active' : ''?>"><a href="#tenants" aria-controls="tenants" role="tab" data-toggle="tab">Tenants</a></li>
-			<li role="presentation" class="<?php echo $iStoredTab === 3 ? 'active' : ''?>"><a href="#users" aria-controls="users" role="tab" data-toggle="tab">Users</a></li>
-			<li role="presentation" class="<?php echo $iStoredTab === 4 ? 'active' : ''?>"><a href="#accounts" aria-controls="accounts" role="tab" data-toggle="tab">Accounts</a></li>
-			<li role="presentation" class="<?php echo $iStoredTab === 5 ? 'active' : ''?>"><a href="#mail" aria-controls="mail" role="tab" data-toggle="tab">Mail</a></li>
-			<li role="presentation" class="<?php echo $iStoredTab === 6 ? 'active' : ''?>"><a href="#objects" aria-controls="objects" role="tab" data-toggle="tab">Objects</a></li>
+			<li role="presentation" class="active"><a href="#objects" aria-controls="objects" role="tab" data-toggle="tab">Objects</a></li>
 		</ul>
 
 		<!-- Tab panes -->
 		<div class="tab-content">
-			<div role="tabpanel" class="tab-pane <?php echo $iStoredTab === 0 ? 'active' : ''?>" id="ajax">
-				<form id="form" onsubmit="return false;">
-					
-					<input name="Token" type="text" placeholder="Token" value="" class="form-control" />
-					<input name="AuthToken" type="text" placeholder="AuthToken" value="" class="form-control" />
-					<input name="Method" type="text" placeholder="Method" class="form-control" />
-					<input name="Module" type="text" placeholder="Module" class="form-control" />
-					
-					<input name="login" type="text" class="form-control" />
-					<input name="password" type="text" class="form-control" />
-					
-					<button id="button">Send</button>
-				</form>
-			</div>
-			<div role="tabpanel" class="tab-pane <?php echo $iStoredTab === 1 ? 'active' : ''?>" id="channels">
-				<?php include "channels/list.php"; ?>
-			</div>
-			<div role="tabpanel" class="tab-pane <?php echo $iStoredTab === 2 ? 'active' : ''?>" id="tenants">
-				<?php include "tenants/list.php"; ?>
-			</div>
-			<div role="tabpanel" class="tab-pane <?php echo $iStoredTab === 3 ? 'active' : ''?>" id="users">
-				<?php include "users/list.php"; ?>
-			</div>
-			<div role="tabpanel" class="tab-pane <?php echo $iStoredTab === 4 ? 'active' : ''?>" id="accounts">
-				<?php include "accounts/list.php"; ?>
-			</div>
-			<div role="tabpanel" class="tab-pane <?php echo $iStoredTab === 5 ? 'active' : ''?>" id="mail">
-				<?php include "mail/list.php"; ?>
-			</div>
-			<div role="tabpanel" class="tab-pane <?php echo $iStoredTab === 6 ? 'active' : ''?>" id="objects">
+			<div role="tabpanel" class="tab-pane active" id="objects">
 				<?php include "objects/list.php"; ?>
 			</div>
 		</div>
 	</div>
-	
-	<script>
-	$('#myTabs')
-		.click(function (e) {
-			e.preventDefault();
-			$(this).tab('show');
-		})
-		.on('shown.bs.tab', function (e) {
-			var index = $(this).children().index($(e.target).parent());
-			document.cookie = "TAB="+index;
-		});
-	
-	$('#button').click(function () {
-		$.ajax('/?/Ajax/', {
-			'method': 'POST',
-			'data': {
-				'Token': $('input[name=Token]').val(),
-				'AuthToken': $('input[name=AuthToken]').val(),
-				'Method': $('input[name=Method]').val(),
-				'Module': $('input[name=Module]').val(),
-				'Parameters': JSON.stringify({
-					'login': $('input[name=login]').val(),
-					'password': $('input[name=password]').val()
-				})
-			}
-		})
-		.always(function() {
-			console.log( "complete", arguments );
-		});
- 	});
-	</script>
 </body>
 </html>

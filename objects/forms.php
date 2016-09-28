@@ -19,7 +19,7 @@
 <!--<button data-bind="click: reset" class="btn btn-default">Reset</button>-->
 <div data-bind="with: propsList">
 	<label>Create item</label>
-	<form method="POST" action="<?php echo $sBaseUrl; ?>">
+	<form method="POST">
 		<input type="hidden" name="ObjectName" data-bind="value: $parent.selectedObjectName"/>
 		<input type="hidden" name="manager" value="objects" />
 		<input type="hidden" name="action" value="create"/>
@@ -47,7 +47,7 @@
 <div data-bind="with: selectedItem">
 	<br />
 	<label>Edit item</label>
-	<form method="POST" action="<?php echo $sBaseUrl; ?>">
+	<form method="POST">
 		<input type="hidden" name="ObjectName" data-bind="value: $parent.selectedObjectName"/>
 		<input type="hidden" name="manager" value="objects" />
 		<input type="hidden" name="action" value="edit"/>
@@ -74,7 +74,7 @@
 </div>
 <!--<div data-bind="with: selectedItem">
 	<label>Delete item</label>
-	<form method="POST" action="<?php echo $sBaseUrl; ?>">
+	<form method="POST">
 		<input type="hidden" name="manager" value="objects"/>
 		<input type="hidden" name="action" value="delete"/>
 		<div class="form-group">
@@ -88,7 +88,7 @@
 <div data-bind="with: checkedItems().length > 0">
 	<br />
 	<label>Delete items</label>
-	<form method="POST" action="<?php echo $sBaseUrl; ?>">
+	<form method="POST">
 		<input type="hidden" name="manager" value="objects" />
 		<input type="hidden" name="action" value="delete_multiple" />
 		<input type="hidden" name="ids" data-bind="textInput: $parent.checkedItems().join(',');" />

@@ -116,7 +116,7 @@
 		this.selectedObjectName(sTabName);
 		
 		$.ajax({
-			url: 'ajax.php',
+			url: 'modules/EavObjectViewer/ajax.php',
 			context: this,
 			type: 'POST',
 			data: oRequest,

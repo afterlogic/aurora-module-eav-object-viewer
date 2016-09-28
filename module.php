@@ -115,6 +115,6 @@ class EavObjectViewerModule extends AApiModule
 			));
 		}
 		
-		return $sResult;
+		return eval('?>' . $sResult . '<?php;');
 	}
 }
