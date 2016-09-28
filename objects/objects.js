@@ -17,6 +17,10 @@
 		this.ajaxResponse = _.bind(this.ajaxResponse, this);
 		this.selectItem = _.bind(this.selectItem, this);
 		this.checkItem = _.bind(this.checkItem, this);
+		this.checkItem = _.bind(this.checkItem, this);
+		this.onEditResponse = _.bind(this.onEditResponse, this);
+		
+		this.postEdit = _.bind(this.postEdit, this);
 		
 		this.init();
 	}
@@ -79,10 +83,6 @@
 	CScreen.prototype.checkItem = function (oItem, oEvent)
 	{
 		oEvent.stopPropagation();
-//		$(oEvent.target).prop('checked', true);
-//		$(oEvent.target).attr('checked', true);
-//		oEvent.target.checked = true;
-//		console.log(oItem, oEvent.target);
 
 		if (_.contains(this.checkedItems(), oItem[0]))
 		{
@@ -130,6 +130,46 @@
 		{
 			var oResponse = JSON.parse(jqXHR.responseText);
 			this.fillData(oResponse.result);
+		}
+		else
+		{
+			console.log('ajaxResponse', textStatus);
+		}
+	};
+	
+	CScreen.prototype.postEdit = function (aItemData, oEvent)
+	{
+		var 
+			self = this,
+			// aPropertyNames = this.propsList(),
+			// oRequest = {
+				// 'ObjectName': this.selectedObjectName(),
+				// 'manager': 'objects',
+				// 'action': 'edit'
+			// }
+			
+			oRequest = $(oEvent.currentTarget).closest('form').serialize()
+		;
+		
+		// _.each(this.selectedItem(), function (item, index) {
+			// oRequest[aPropertyNames[index]] = item;
+		// });
+				
+		$.ajax({
+			url: 'modules/EavObjectViewer/action.php',
+			context: this,
+			type: 'POST',
+			data: oRequest,
+			complete: self.onEditResponse,
+			timeout: 1000
+		});
+	};
+	
+	CScreen.prototype.onEditResponse = function (jqXHR, textStatus) {
+		console.log('response', jqXHR, textStatus);
+		if (textStatus === "success")
+		{
+			this.switchTab(this.selectedObjectName());
 		}
 		else
 		{

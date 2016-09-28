@@ -47,7 +47,7 @@
 <div data-bind="with: selectedItem">
 	<br />
 	<label>Edit item</label>
-	<form method="POST">
+	<form method="POST" onsubmit="return false;">
 		<input type="hidden" name="ObjectName" data-bind="value: $parent.selectedObjectName"/>
 		<input type="hidden" name="manager" value="objects" />
 		<input type="hidden" name="action" value="edit"/>
@@ -69,7 +69,7 @@
 				</tr>
 			</table>
 		</div>
-		<input type="submit" value="Update" class="btn btn-danger" />
+		<input type="submit" value="Update" class="btn btn-danger" data-bind="click: $parent.postEdit" />
 	</form>
 </div>
 <!--<div data-bind="with: selectedItem">

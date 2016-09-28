@@ -30,12 +30,12 @@
 
 		exit(0);
 	}
-
 	if (!defined('PSEVEN_APP_ROOT_PATH'))
 	{
-		define('PSEVEN_APP_ROOT_PATH', dirname(rtrim(realpath(__DIR__), '\\/')).'/');
+		define('PSEVEN_APP_ROOT_PATH', preg_replace("/modules\//", '', dirname(rtrim(realpath(__DIR__), '\\/')).'/'));
 	}
 
+	// var_dump(PSEVEN_APP_ROOT_PATH);
 	define('PSEVEN_APP_START', microtime(true));
 
 	/**

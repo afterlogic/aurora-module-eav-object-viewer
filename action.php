@@ -16,11 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-$oHttp = \MailSo\Base\Http::NewInstance();
+// $oHttp = \MailSo\Base\Http::NewInstance();
 
-if ($oHttp->HasPost('manager'))
+if ($_POST['manager'])
 {
-	$sManagerName = $oHttp->GetPost('manager');
+	require_once "init.php";
+	
+	$sManagerName = $_POST['manager'];
 	
 	if (in_array($sManagerName, array('channels', 'tenants', 'accounts', 'users', 'contacts', 'mail', 'objects')))
 	{

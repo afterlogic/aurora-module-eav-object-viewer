@@ -18,21 +18,19 @@
 
 require_once "init.php";
 
-$oHttp = \MailSo\Base\Http::NewInstance();
-
 $response = array(
 	'error' => true,
 	'message' => 'Unknown error occours',
 	'result' => array()
 );
 
-if ($oHttp->HasPost('ObjectName'))
+if ($_POST['ObjectName'])
 {
 	$aResultItems = array();
 	$oManagerApi = \CApi::GetSystemManager('eav', 'db');
 	$aTypes = $oManagerApi->getTypes();
 
-	$aItems = $oManagerApi->getEntities($oHttp->GetPost('ObjectName'));
+	$aItems = $oManagerApi->getEntities($_POST['ObjectName']);
 	if (is_array($aItems))
 	{
 		foreach ($aItems as $oItem)
@@ -43,7 +41,7 @@ if ($oHttp->HasPost('ObjectName'))
 		}
 
 		//TODO: fix password encoder
-		if ($oHttp->GetPost('ObjectName') == 'CAccount') {
+		if ($_POST['ObjectName'] == 'CAccount') {
 			foreach ($aResultItems as &$oResultItem) {
 				$oResultItem['Password'] = htmlspecialchars($oResultItem['Password']);
 			}
