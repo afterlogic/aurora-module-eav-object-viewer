@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-if (!defined('PSEVEN_APP_ROOT_PATH'))
+if (!defined('AURORA_APP_ROOT_PATH'))
 {
 	include "init.php";
 	

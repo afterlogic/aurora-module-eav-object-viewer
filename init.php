@@ -30,13 +30,13 @@
 
 		exit(0);
 	}
-	if (!defined('PSEVEN_APP_ROOT_PATH'))
+	if (!defined('AURORA_APP_ROOT_PATH'))
 	{
-		define('PSEVEN_APP_ROOT_PATH', preg_replace("/modules\//", '', dirname(rtrim(realpath(__DIR__), '\\/')).'/'));
+		define('AURORA_APP_ROOT_PATH', preg_replace("/modules\//", '', dirname(rtrim(realpath(__DIR__), '\\/')).'/'));
 	}
 
-	// var_dump(PSEVEN_APP_ROOT_PATH);
-	define('PSEVEN_APP_START', microtime(true));
+	// var_dump(AURORA_APP_ROOT_PATH);
+	define('AURORA_APP_START', microtime(true));
 
 	/**
 	 * @param string $sClassName
@@ -57,7 +57,7 @@
 				if (0 === strpos($sClassName, $sClass) && false !== strpos($sClassName, '\\'))
 				{
 					$sClassPath = (strtolower($sClass) === strtolower($sFolder)) ? '' : $sClass . '/';
-					$sFileName = PSEVEN_APP_ROOT_PATH.$sFolder.'/'.$sClassPath.str_replace('\\', '/', substr($sClassName, strlen($sClass) + 1)).'.php';
+					$sFileName = AURORA_APP_ROOT_PATH.$sFolder.'/'.$sClassPath.str_replace('\\', '/', substr($sClassName, strlen($sClass) + 1)).'.php';
 					if (file_exists($sFileName))
 					{
 						return include_once $sFileName;
@@ -73,7 +73,7 @@
 
 	if (class_exists('System\Service'))
 	{
-		include PSEVEN_APP_ROOT_PATH.'system/api.php';
+		include AURORA_APP_ROOT_PATH.'system/api.php';
 //		\System\Service::NewInstance()->Handle();	
 	}
 	else
