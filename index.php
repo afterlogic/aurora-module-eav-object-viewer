@@ -20,7 +20,7 @@ if (!defined('AURORA_APP_ROOT_PATH'))
 {
 	include "init.php";
 	
-	$oAppData = \CApi::GetModule('Core')->GetAppData();
+	$oAppData = \CApi::GetModule('Core')->GetSettings();
 
 	$sToken = isset($oAppData['Token']) ? $oAppData['Token'] : null;
 	$sAuthToken = isset($_COOKIE['AUTH']) ? $_COOKIE['AUTH'] : '';
