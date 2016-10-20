@@ -74,6 +74,7 @@
 	if (class_exists('System\Service'))
 	{
 		include AURORA_APP_ROOT_PATH.'system/api.php';
+		\CApi::Init();
 //		\System\Service::NewInstance()->Handle();	
 	}
 	else
