@@ -29,77 +29,11 @@ class EavObjectViewerModule extends AApiModule
 	
 	public function EntryEavObjectViewer()
 	{
-		// $oAuthenticatedAccount = $this->oHelpDeskDecorator->GetCurrentUser();
-
-		$oApiIntegrator = \CApi::GetSystemManager('integrator');
-		
-		// $sTenantName = \CApi::getTenantName();
-		// $mHelpdeskIdTenant = $this->oCoreDecorator->GetTenantIdByName($sTenantName);
-		
-		// if (!is_int($mHelpdeskIdTenant))
-		// {
-			// \CApi::Location('./');
-			// return '';
-		// }
-
-		// $bDoId = false;
-		// $sThread = $this->oHttp->GetQuery('thread');
-		// $sThreadAction = $this->oHttp->GetQuery('action');
-		// if (0 < strlen($sThread))
-		// {
-			// $iThreadID = $this->oApiHelpDeskManager->getThreadIdByHash($mHelpdeskIdTenant, $sThread);
-			// if (0 < $iThreadID)
-			// {
-				// $oApiIntegrator->setThreadIdFromRequest($iThreadID, $sThreadAction);
-				// $bDoId = true;
-			// }
-		// }
-
-		// $sActivateHash = $this->oHttp->GetQuery('activate');
-		// if (0 < strlen($sActivateHash) && !$this->oHttp->HasQuery('forgot'))
-		// {
-			// $bRemove = true;
-			// $oUser = $this->oApiHelpDeskManager->getUserByActivateHash($mHelpdeskIdTenant, $sActivateHash);
-			// /* @var $oUser \CHelpdeskUser */
-			// if ($oUser)
-			// {
-				// if (!$oUser->Activated)
-				// {
-					// $oUser->Activated = true;
-					// $oUser->regenerateActivateHash();
-
-					// if ($this->oApiHelpDeskManager->updateUser($oUser))
-					// {
-						// $bRemove = false;
-						// $oApiIntegrator->setUserAsActivated($oUser);
-					// }
-				// }
-			// }
-
-			// if ($bRemove)
-			// {
-				// $oApiIntegrator->removeUserAsActivated();
-			// }
-		// }
-
-	
-		// if ($oAuthenticatedAccount && $oAuthenticatedAccount->IdTenant === $mHelpdeskIdTenant)
-		// {
-			// if (!$bDoId)
-			// {
-				// $oApiIntegrator->setThreadIdFromRequest(0);
-			// }
-
-			// $oApiIntegrator->skipMobileCheck();
-			// \CApi::Location('./');
-			// return '';
-		// }
-		
-		// $oCoreClientModule = \CApi::GetModule('CoreWebclient');
-		// if ($oCoreClientModule instanceof \AApiModule) {
+		$oCoreClientModule = \CApi::GetModule('CoreWebclient');
+		if ($oCoreClientModule instanceof \AApiModule) {
 			$sResult = file_get_contents($this->GetPath().'/templates/Index.html');
-		// }
-		
+		}
+
 		if (is_string($sResult))
 		{
 			$sFrameOptions = \CApi::GetConf('labs.x-frame-options', '');
@@ -107,12 +41,14 @@ class EavObjectViewerModule extends AApiModule
 				@\header('X-Frame-Options: '.$sFrameOptions);
 			}
 
-			$sResult = strtr($sResult, array(
-				'{{AppVersion}}' => AURORA_APP_VERSION,
-				'{{IntegratorDir}}' =>  $oApiIntegrator->isRtl() ? 'rtl' : 'ltr',
-				'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink('-helpdesk'),
-				'{{IntegratorBody}}' => $oApiIntegrator->buildBody('-helpdesk')
-			));
+//			$oApiIntegrator = \CApi::GetSystemManager('integrator');
+//			
+//			$sResult = strtr($sResult, array(
+//				'{{AppVersion}}' => AURORA_APP_VERSION,
+//				'{{IntegratorDir}}' =>  $oApiIntegrator->isRtl() ? 'rtl' : 'ltr',
+//				'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink('-eavviewr'),
+//				'{{IntegratorBody}}' => $oApiIntegrator->buildBody('-eavviewr')
+//			));
 		}
 		
 		return eval('?>' . $sResult . '<?php;');
