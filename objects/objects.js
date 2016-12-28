@@ -162,7 +162,7 @@
 		// });
 				
 		$.ajax({
-			url: 'modules/EavObjectViewer/action.php',
+			url: 'modules/EavObjectViewer/ajax.php',
 			context: this,
 			type: 'POST',
 			data: oRequest,

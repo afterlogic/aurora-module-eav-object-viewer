@@ -26,10 +26,92 @@ $response = array(
 	'result' => array()
 );
 
+$oManagerApi = \CApi::GetSystemManager('eav', 'db');
+if (isset($_POST['action']))
+{
+	switch ($_POST['action'])
+	{
+		case 'create':
+			if ($_POST['ObjectName'])
+			{
+				$sObjectType = $_POST['ObjectName'];
+				$oObject = call_user_func($sObjectType . '::createInstance');
+
+				$aMap = $oObject->GetMap();
+				$aViewProperties = array_keys($aMap);
+
+				if ($_POST['iObjectId'])
+				{
+					foreach ($aViewProperties as $property)
+					{
+						if ($_POST[$property])
+						{
+							$oObject->{$property} = $_POST[$property];
+						}
+					}
+				}
+
+				$oManagerApi->saveEntity($oObject);
+			}
+			break;
+
+		case 'edit':
+			if ($_POST['ObjectName'])
+			{
+				$sObjectType = $_POST['ObjectName'];
+				$oObject = call_user_func($sObjectType . '::createInstance');
+
+				$aMap = $oObject->GetMap();
+				$aViewProperties = array_keys($aMap);
+
+				if ($_POST['iObjectId'])
+				{
+					$oObject->iId = (int)$_POST['iObjectId'];
+
+					foreach ($aViewProperties as $property)
+					{
+						if ($_POST[$property])
+						{
+							$oObject->{$property} = $_POST[$property];
+						}
+					}
+				}
+
+				$result = $oManagerApi->saveEntity($oObject);
+
+				if ($result) {
+					$response['error'] = false;
+					$response['message'] = '';
+				}
+			}
+			break;
+
+		case 'delete':
+			$oManagerApi->deleteEntity($_POST['iObjectId']);
+			break;
+		case 'delete_multiple':
+			if ($_POST['ids'])
+			{
+				$aIds = explode(',', $_POST['ids']);
+			}
+			foreach ($aIds as $id) {
+				if (!$oManagerApi->deleteEntity((int)$id))
+				{
+					$result = false;
+				}
+			}
+
+			if ($result) {
+				$response['error'] = false;
+				$response['message'] = '';
+			}
+			break;
+	}
+}
+
 if ($_POST['ObjectName'])
 {
 	$aResultItems = array();
-	$oManagerApi = \CApi::GetSystemManager('eav', 'db');
 	$aTypes = $oManagerApi->getTypes();
 
 	$aItems = $oManagerApi->getEntities($_POST['ObjectName']);
