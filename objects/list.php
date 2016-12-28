@@ -27,14 +27,14 @@
 			<li role="presentation" class="<?php //echo $iStoredTab === 6 ? 'active' : ''?>"><a href="#ajax" aria-controls="ajax" role="tab" data-toggle="tab" data-bind="text: $data, attr: {'href': '#object-'+$data}, click: $parent.switchTab"></a></li>
 		</ul>
 		<div class="tab-content" data-bind="foreach: objectTypes">
-			<div role="tabpanel" class="table-responsive tab-pane <?php echo $iStoredTab === 0 ? 'active' : ''?>" id="" data-bind="attr: {'id': 'object-'+$data}">
+			<div role="tabpanel" class="table-responsive tab-pane" id="" data-bind="attr: {'id': 'object-'+$data}">
 				<table class="table table-striped">
 					<tr>
 						<th>
 							<input type="checkbox" name="test" />
 						</th>
 						<!-- ko foreach: $parent.propsList -->
-						<th data-bind="text: $data;"></th>
+						<th data-bind="text: $data"></th>
 						<!-- /ko -->
 					</tr>
 					<!-- ko foreach: $parent.objectsList -->
@@ -43,7 +43,7 @@
 							<input type="checkbox" class="checkbox" name="test" data-bind="click: $parents[1].checkItem, checked: _.contains($parents[1].checkedItems(), $data[0])" />
 						</th>
 						<!-- ko foreach: $data -->
-							<th data-bind="text: $data;"></th>
+							<th nowrap data-bind="text: $data;"></th>
 					<!-- /ko -->
 					</tr>
 					<!-- /ko -->

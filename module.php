@@ -18,39 +18,19 @@
 
 class EavObjectViewerModule extends AApiModule
 {
-	public $oCoreDecorator = null;
-	
 	public function init() 
 	{
 		$this->AddEntry('eav-viewer', 'EntryEavObjectViewer');
-		
-		$this->oCoreDecorator = \CApi::GetModuleDecorator('Core');
 	}
 	
 	public function EntryEavObjectViewer()
 	{
 		$oCoreClientModule = \CApi::GetModule('CoreWebclient');
-		if ($oCoreClientModule instanceof \AApiModule) {
+		if ($oCoreClientModule instanceof \AApiModule) 
+		{
 			$sResult = file_get_contents($this->GetPath().'/templates/Index.html');
 		}
 
-		if (is_string($sResult))
-		{
-			$sFrameOptions = \CApi::GetConf('labs.x-frame-options', '');
-			if (0 < \strlen($sFrameOptions)) {
-				@\header('X-Frame-Options: '.$sFrameOptions);
-			}
-
-//			$oApiIntegrator = \CApi::GetSystemManager('integrator');
-//			
-//			$sResult = strtr($sResult, array(
-//				'{{AppVersion}}' => AURORA_APP_VERSION,
-//				'{{IntegratorDir}}' =>  $oApiIntegrator->isRtl() ? 'rtl' : 'ltr',
-//				'{{IntegratorLinks}}' => $oApiIntegrator->buildHeadersLink('-eavviewr'),
-//				'{{IntegratorBody}}' => $oApiIntegrator->buildBody('-eavviewr')
-//			));
-		}
-		
 		return eval('?>' . $sResult . '<?php;');
 	}
 }

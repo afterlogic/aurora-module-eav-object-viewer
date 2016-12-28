@@ -16,7 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-require_once "init.php";
+require_once "../../common.php";
+include_once AURORA_APP_ROOT_PATH.'system/api.php';
+\CApi::Init(true);
 
 $response = array(
 	'error' => true,
@@ -41,8 +43,10 @@ if ($_POST['ObjectName'])
 		}
 
 		//TODO: fix password encoder
-		if ($_POST['ObjectName'] == 'CAccount') {
-			foreach ($aResultItems as &$oResultItem) {
+		if ($_POST['ObjectName'] == 'CAccount') 
+		{
+			foreach ($aResultItems as &$oResultItem) 
+			{
 				$oResultItem['Password'] = htmlspecialchars($oResultItem['Password']);
 			}
 		}
