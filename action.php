@@ -39,6 +39,7 @@ if (isset($_POST['action']))
 				'result' => $oManagerApi->getTypes()
 			];			
 			break;
+		
 		case 'create':
 			if ($_POST['ObjectName'])
 			{
@@ -98,6 +99,7 @@ if (isset($_POST['action']))
 		case 'delete':
 			$oManagerApi->deleteEntity($_POST['iObjectId']);
 			break;
+		
 		case 'delete_multiple':
 			if ($_POST['ids'])
 			{
@@ -117,32 +119,35 @@ if (isset($_POST['action']))
 				$response['message'] = '';
 			}
 			break;
-	}
-}
-
-if (isset($_POST['ObjectName']))
-{
-	$aResultItems = array();
-
-	$aItems = $oManagerApi->getEntities($_POST['ObjectName']);
-	if (is_array($aItems))
-	{
-		foreach ($aItems as $oItem)
-		{
-			$itemData = $oItem->toArray();
-			if ($_POST['ObjectName'] == 'CAccount') 
+			
+		case 'list':
+			if (isset($_POST['ObjectName']))
 			{
-				$itemData['Password'] = htmlspecialchars($itemData['Password']);
-			}
-			$aResultItems[] = $itemData;
-		}
+				$aResultItems = array();
 
-		$response = [
-			'error' => false,
-			'message'=> '',
-			'result' => $aResultItems
-		];
+				$aItems = $oManagerApi->getEntities($_POST['ObjectName']);
+				if (is_array($aItems))
+				{
+					foreach ($aItems as $oItem)
+					{
+						$itemData = $oItem->toArray();
+						if ($_POST['ObjectName'] == 'CAccount') 
+						{
+							$itemData['Password'] = htmlspecialchars($itemData['Password']);
+						}
+						$aResultItems[] = $itemData;
+					}
+
+					$response = [
+						'error' => false,
+						'message'=> '',
+						'result' => $aResultItems
+					];
+				}
+			}
+			break;
 	}
 }
+
 
 echo json_encode($response, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);

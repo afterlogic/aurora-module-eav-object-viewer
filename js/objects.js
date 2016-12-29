@@ -120,6 +120,7 @@
 			context: this,
 			type: 'POST',
 			data: {
+				'action': 'list',
 				'ObjectName': sTabName
 			},
 			complete: self.ajaxResponse,
@@ -155,20 +156,9 @@
 	{
 		var 
 			self = this,
-			// aPropertyNames = this.propsList(),
-			// oRequest = {
-				// 'ObjectName': this.selectedObjectName(),
-				// 'manager': 'objects',
-				// 'action': 'edit'
-			// }
-			
 			oRequest = $(oEvent.currentTarget).closest('form').serialize()
 		;
-		
-		// _.each(this.selectedItem(), function (item, index) {
-			// oRequest[aPropertyNames[index]] = item;
-		// });
-				
+
 		$.ajax({
 			url: 'modules/EavObjectViewer/action.php',
 			context: this,
