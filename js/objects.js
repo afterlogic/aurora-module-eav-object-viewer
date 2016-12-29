@@ -4,7 +4,7 @@
 	
 	function CScreen ()
 	{
-		this.objectTypes = [];
+		this.objectTypes = ko.observableArray([]);
 		
 		this.objectsList = ko.observableArray([]);
 		this.propsList = ko.observableArray([]);
@@ -17,29 +17,27 @@
 		this.ajaxResponse = _.bind(this.ajaxResponse, this);
 		this.selectItem = _.bind(this.selectItem, this);
 		this.checkItem = _.bind(this.checkItem, this);
-		this.checkItem = _.bind(this.checkItem, this);
 		
 		this.postForm = _.bind(this.postForm, this);
 		this.onPostResponse = _.bind(this.onPostResponse, this);
-		
 		
 		this.init();
 	}
 	
 	CScreen.prototype.init = function () {
-		this.objectTypes = window.staticData['objects'];
-
-//		var aListData= [];
-
-//		_.each(window.staticData['objects_list'], function (oItem, iIndex) {
-//
-//			aListData.push(_.map(oItem, function (oItem1) {
-//				return oItem1;
-//			}));
-//		});
-//		this.propsList(window.staticData['objects_props']);
-
-//		this.objectsList(aListData);
+		var 
+			self = this
+		;
+		$.ajax({
+			url: 'modules/EavObjectViewer/action.php',
+			context: this,
+			type: 'POST',
+			data: {
+				'action': 'types'
+			},
+			complete: self.ajaxTypesResponse,
+			timeout: 1000
+		});
 	};
 	
 	CScreen.prototype.fillData = function (aData)
@@ -110,25 +108,35 @@
 	CScreen.prototype.switchTab = function (sTabName)
 	{
 		var 
-			self = this,
-			oRequest = {
-				'ObjectName': sTabName
-			}
+			self = this
 		;
 		
 		this.selectedItem(null);
 		this.checkedItems([]);
-		
 		this.selectedObjectName(sTabName);
 		
 		$.ajax({
-			url: 'modules/EavObjectViewer/ajax.php',
+			url: 'modules/EavObjectViewer/action.php',
 			context: this,
 			type: 'POST',
-			data: oRequest,
+			data: {
+				'ObjectName': sTabName
+			},
 			complete: self.ajaxResponse,
 			timeout: 1000
 		});
+	};
+	
+	CScreen.prototype.ajaxTypesResponse = function (jqXHR, textStatus) {
+		if (textStatus === "success")
+		{
+			var oResponse = JSON.parse(jqXHR.responseText);
+			this.objectTypes(oResponse.result);
+		}
+		else
+		{
+			console.log('ajaxResponse', textStatus);
+		}
 	};
 	
 	CScreen.prototype.ajaxResponse = function (jqXHR, textStatus) {
@@ -141,7 +149,7 @@
 		{
 			console.log('ajaxResponse', textStatus);
 		}
-	};
+	};	
 	
 	CScreen.prototype.postForm = function (aItemData, oEvent)
 	{
@@ -162,7 +170,7 @@
 		// });
 				
 		$.ajax({
-			url: 'modules/EavObjectViewer/ajax.php',
+			url: 'modules/EavObjectViewer/action.php',
 			context: this,
 			type: 'POST',
 			data: oRequest,
@@ -172,7 +180,6 @@
 	};
 	
 	CScreen.prototype.onPostResponse = function (jqXHR, textStatus) {
-		console.log('response', jqXHR, textStatus);
 		if (textStatus === "success")
 		{
 			this.switchTab(this.selectedObjectName());

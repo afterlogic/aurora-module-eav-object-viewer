@@ -25,12 +25,25 @@ class EavObjectViewerModule extends AApiModule
 	
 	public function EntryEavObjectViewer()
 	{
-		$oCoreClientModule = \CApi::GetModule('CoreWebclient');
-		if ($oCoreClientModule instanceof \AApiModule) 
+		$bIsAdmin = false;
+		try
 		{
-			$sResult = file_get_contents($this->GetPath().'/templates/Index.html');
+			\CApi::checkUserRoleIsAtLeast(\EUserRole::SuperAdmin);
+			$bIsAdmin = true;
 		}
-
-		return eval('?>' . $sResult . '<?php;');
+		catch (\System\Exceptions\AuroraApiException $oEcxeption) {}
+		
+		if ($bIsAdmin)
+		{
+			$oCoreClientModule = \CApi::GetModule('CoreWebclient');
+			if ($oCoreClientModule instanceof \AApiModule) 
+			{
+				return file_get_contents($this->GetPath().'/templates/Index.html');
+			}
+		}
+		else
+		{
+			echo "Auth Error!";
+		}
 	}
 }

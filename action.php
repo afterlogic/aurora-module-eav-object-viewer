@@ -27,10 +27,18 @@ $response = array(
 );
 
 $oManagerApi = \CApi::GetSystemManager('eav', 'db');
+
 if (isset($_POST['action']))
 {
 	switch ($_POST['action'])
 	{
+		case 'types':
+			$response = [
+				'error' => false,
+				'message'=> '',
+				'result' => $oManagerApi->getTypes()
+			];			
+			break;
 		case 'create':
 			if ($_POST['ObjectName'])
 			{
@@ -79,7 +87,8 @@ if (isset($_POST['action']))
 
 				$result = $oManagerApi->saveEntity($oObject);
 
-				if ($result) {
+				if ($result) 
+				{
 					$response['error'] = false;
 					$response['message'] = '';
 				}
@@ -94,14 +103,16 @@ if (isset($_POST['action']))
 			{
 				$aIds = explode(',', $_POST['ids']);
 			}
-			foreach ($aIds as $id) {
+			foreach ($aIds as $id) 
+			{
 				if (!$oManagerApi->deleteEntity((int)$id))
 				{
 					$result = false;
 				}
 			}
 
-			if ($result) {
+			if ($result) 
+			{
 				$response['error'] = false;
 				$response['message'] = '';
 			}
@@ -109,10 +120,9 @@ if (isset($_POST['action']))
 	}
 }
 
-if ($_POST['ObjectName'])
+if (isset($_POST['ObjectName']))
 {
 	$aResultItems = array();
-	$aTypes = $oManagerApi->getTypes();
 
 	$aItems = $oManagerApi->getEntities($_POST['ObjectName']);
 	if (is_array($aItems))
@@ -120,27 +130,19 @@ if ($_POST['ObjectName'])
 		foreach ($aItems as $oItem)
 		{
 			$itemData = $oItem->toArray();
-			
+			if ($_POST['ObjectName'] == 'CAccount') 
+			{
+				$itemData['Password'] = htmlspecialchars($itemData['Password']);
+			}
 			$aResultItems[] = $itemData;
 		}
 
-		//TODO: fix password encoder
-		if ($_POST['ObjectName'] == 'CAccount') 
-		{
-			foreach ($aResultItems as &$oResultItem) 
-			{
-				$oResultItem['Password'] = htmlspecialchars($oResultItem['Password']);
-			}
-		}
-
-		$response['error'] = false;
-		$response['message'] = '';
-		$response['result'] = $aResultItems;
+		$response = [
+			'error' => false,
+			'message'=> '',
+			'result' => $aResultItems
+		];
 	}
-}
-else
-{
-	$response['message'] = 'Unknown object type';
 }
 
 echo json_encode($response, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
