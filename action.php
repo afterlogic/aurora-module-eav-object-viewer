@@ -86,7 +86,7 @@ if (isset($_POST['action']))
 					}
 				}
 				
-				if ($_POST['@DisabledModules']) {
+				if (isset($_POST['@DisabledModules'])) {
 					$oManagerApi->setAttributes(
 						array($oObject->iId), 
 						array(new \CAttribute('@DisabledModules', $_POST['@DisabledModules'], 'string'))
