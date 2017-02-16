@@ -8,6 +8,9 @@
 		
 		this.objectsList = ko.observableArray([]);
 		this.propsList = ko.observableArray([]);
+
+		this.searchField = ko.observable();
+		this.searchText = ko.observable();
 		
 		this.selectedItem = ko.observable(null);
 		this.selectedObjectName = ko.observable(null);
@@ -110,7 +113,7 @@
 		var 
 			self = this
 		;
-		
+		this.searchText('');
 		this.selectedItem(null);
 		this.checkedItems([]);
 		this.selectedObjectName(sTabName);
@@ -122,6 +125,27 @@
 			data: {
 				'action': 'list',
 				'ObjectName': sTabName
+			},
+			complete: self.ajaxResponse,
+			timeout: 1000
+		});
+	};
+	
+	CScreen.prototype.searchClick = function ()
+	{
+		var 
+			self = this
+		;
+		
+		$.ajax({
+			url: 'modules/EavObjectViewer/action.php',
+			context: this,
+			type: 'POST',
+			data: {
+				'action': 'list',
+				'ObjectName': this.selectedObjectName(),
+				'searchField': this.searchField(),
+				'searchText': this.searchText()
 			},
 			complete: self.ajaxResponse,
 			timeout: 1000

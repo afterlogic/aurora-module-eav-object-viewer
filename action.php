@@ -86,11 +86,9 @@ if (isset($_POST['action']))
 					}
 				}
 				
-				if (isset($_POST['@DisabledModules'])) {
-					$oManagerApi->setAttributes(
-						array($oObject->EntityId), 
-						array(new \CAttribute('@DisabledModules', $_POST['@DisabledModules'], 'string'))
-					);
+				if (isset($_POST['@DisabledModules'])) 
+				{
+					$oObject->{'@DisabledModules'} = $_POST['@DisabledModules'];
 				}
 
 				$result = $oManagerApi->saveEntity($oObject);
@@ -132,7 +130,13 @@ if (isset($_POST['action']))
 			{
 				$aResultItems = array();
 
-				$aItems = $oManagerApi->getEntities($_POST['ObjectName']);
+				$aFilters = array();
+				if (isset($_POST['searchField'], $_POST['searchText']))
+				{
+					$aFilters = [$_POST['searchField'] => ['%'.$_POST['searchText'].'%', 'LIKE']];
+				}
+				
+				$aItems = $oManagerApi->getEntities($_POST['ObjectName'], array(), 0, 0, $aFilters);
 				if (is_array($aItems))
 				{
 					foreach ($aItems as $oItem)

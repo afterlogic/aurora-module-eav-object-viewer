@@ -52,6 +52,11 @@
 								</a>
 							</li>
 						</ul>
+						<div data-bind="visible: propsList().length > 0">
+							<select data-bind="options: propsList, value: searchField"></select>							
+							<input data-bind="textInput: searchText"/>
+							<button data-bind="click: searchClick"/>Search</button>
+						</div>
 						<div class="tab-content" data-bind="foreach: objectTypes">
 							<div role="tabpanel" class="table-responsive tab-pane" id="" data-bind="attr: {'id': 'object-'+$data}">
 								<table class="table table-striped">
@@ -82,6 +87,21 @@
 						</div>
 					</div>
 					<div class="col-sm-12">
+						<div data-bind="with: checkedItems().length > 0">
+							<br />
+							<label>Delete items</label>
+							<form method="POST">
+								<input type="hidden" name="manager" value="objects" />
+								<input type="hidden" name="action" value="delete_multiple" />
+								<input type="hidden" name="ids" data-bind="textInput: $parent.checkedItems().join(',');" />
+
+								<input type="submit" 
+									   value="Delete" 
+									   class="btn btn-danger" 
+									   data-bind="click: $parent.postForm, value: 'Delete: '+ $parent.checkedItems().join(', ');" 
+								/>
+							</form>
+						</div>						
 						<div data-bind="with: selectedItem">
 							<br />
 							<label>Edit item</label>
@@ -109,21 +129,6 @@
 									</table>
 								</div>
 								<input type="submit" value="Update" class="btn btn-danger" data-bind="click: $parent.postForm" />
-							</form>
-						</div>
-						<div data-bind="with: checkedItems().length > 0">
-							<br />
-							<label>Delete items</label>
-							<form method="POST">
-								<input type="hidden" name="manager" value="objects" />
-								<input type="hidden" name="action" value="delete_multiple" />
-								<input type="hidden" name="ids" data-bind="textInput: $parent.checkedItems().join(',');" />
-
-								<input type="submit" 
-									   value="Delete" 
-									   class="btn btn-danger" 
-									   data-bind="click: $parent.postForm, value: 'Delete: '+ $parent.checkedItems().join(', ');" 
-								/>
 							</form>
 						</div>
 					</div>
