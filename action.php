@@ -49,7 +49,7 @@ if (isset($_POST['action']))
 				$aMap = $oObject->GetMap();
 				$aViewProperties = array_keys($aMap);
 
-				if ($_POST['iObjectId'])
+				if ($_POST['EntityId'])
 				{
 					foreach ($aViewProperties as $property)
 					{
@@ -73,9 +73,9 @@ if (isset($_POST['action']))
 				$aMap = $oObject->GetMap();
 				$aViewProperties = array_keys($aMap);
 
-				if ($_POST['iObjectId'])
+				if ($_POST['EntityId'])
 				{
-					$oObject->iId = (int)$_POST['iObjectId'];
+					$oObject->EntityId = (int)$_POST['EntityId'];
 
 					foreach ($aViewProperties as $property)
 					{
@@ -88,7 +88,7 @@ if (isset($_POST['action']))
 				
 				if (isset($_POST['@DisabledModules'])) {
 					$oManagerApi->setAttributes(
-						array($oObject->iId), 
+						array($oObject->EntityId), 
 						array(new \CAttribute('@DisabledModules', $_POST['@DisabledModules'], 'string'))
 					);
 				}
@@ -104,7 +104,7 @@ if (isset($_POST['action']))
 			break;
 
 		case 'delete':
-			$oManagerApi->deleteEntity($_POST['iObjectId']);
+			$oManagerApi->deleteEntity($_POST['EntityId']);
 			break;
 		
 		case 'delete_multiple':
