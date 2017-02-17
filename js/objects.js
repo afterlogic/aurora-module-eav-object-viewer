@@ -8,6 +8,7 @@
 		
 		this.objectsList = ko.observableArray([]);
 		this.propsList = ko.observableArray([]);
+		this.propsTypeList = ko.observableArray([]);
 
 		this.searchField = ko.observable();
 		this.searchText = ko.observable();
@@ -45,16 +46,22 @@
 	
 	CScreen.prototype.fillData = function (aData)
 	{
-		if (aData && aData.length > 0)
+		if (aData && aData.Values.length > 0)
 		{
-			this.propsList(_.keys(aData[0]));
-			this.objectsList(_.map(aData, function (oItem) {
+			this.propsList(_.map(aData.Fields, function (sValue, sKey) {
+				return sKey;
+			}));
+			this.propsTypeList(_.map(aData.Fields, function (sValue) {
+				return sValue;
+			}));
+			this.objectsList(_.map(aData.Values, function (oItem) {
 				return _.values(oItem);
 			}));
 		}
 		else
 		{
 			this.propsList([]);
+			this.propsTypeList([]);
 			this.objectsList([]);
 		}
 	};

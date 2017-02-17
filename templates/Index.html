@@ -65,7 +65,11 @@
 											<input type="checkbox" name="test" />
 										</th>
 										<!-- ko foreach: $parent.propsList -->
-										<th data-bind="text: $data"></th>
+										<th>
+											<span data-bind="text: $data"></span>
+											<br />
+											<span data-bind="text: '(' + $root.propsTypeList()[$index()] + ')'"></span>
+										</th>
 										<!-- /ko -->
 									</tr>
 									<!-- ko foreach: $parent.objectsList -->

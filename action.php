@@ -142,11 +142,21 @@ if (isset($_POST['action']))
 					foreach ($aItems as $oItem)
 					{
 						$itemData = $oItem->toArray();
+						foreach ($itemData as $sKey => $mValue)
+						{
+							$sType = 'string';
+							$oAttribute = $oItem->getAttribute($sKey);
+							if ($oAttribute)
+							{
+								$sType = $oAttribute->Type;
+							}
+							$aResultItems['Fields'][$sKey] = $sType;
+						}
 						if ($_POST['ObjectName'] == 'CAccount') 
 						{
 							$itemData['Password'] = htmlspecialchars($itemData['Password']);
 						}
-						$aResultItems[] = $itemData;
+						$aResultItems['Values'][] = $itemData;
 					}
 
 					$response = [
