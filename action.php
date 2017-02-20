@@ -44,7 +44,7 @@ if (isset($_POST['action']))
 			{
 				$sObjectType = $_POST['ObjectName'];
 				
-				$oObject = \AEntity::createInstance($sObjectType);
+				$oObject = \CEntity::createInstance($sObjectType);
 				
 				$aMap = $oObject->getMap();
 				
