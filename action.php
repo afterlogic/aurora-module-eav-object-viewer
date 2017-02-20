@@ -39,31 +39,6 @@ if (isset($_POST['action']))
 				'result' => $oManagerApi->getTypes()
 			];			
 			break;
-		
-		case 'create':
-			if ($_POST['ObjectName'])
-			{
-				$sObjectType = $_POST['ObjectName'];
-				$oObject = call_user_func($sObjectType . '::createInstance');
-
-				$aMap = $oObject->GetMap();
-				$aViewProperties = array_keys($aMap);
-
-				if ($_POST['EntityId'])
-				{
-					foreach ($aViewProperties as $property)
-					{
-						if ($_POST[$property])
-						{
-							$oObject->{$property} = $_POST[$property];
-						}
-					}
-				}
-
-				$oManagerApi->saveEntity($oObject);
-			}
-			break;
-
 		case 'edit':
 			if ($_POST['ObjectName'])
 			{
@@ -71,6 +46,7 @@ if (isset($_POST['action']))
 				$oObject = call_user_func($sObjectType . '::createInstance');
 
 				$aMap = $oObject->GetMap();
+				
 				$aViewProperties = array_keys($aMap);
 
 				if ($_POST['EntityId'])
