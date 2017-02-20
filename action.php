@@ -43,9 +43,10 @@ if (isset($_POST['action']))
 			if ($_POST['ObjectName'])
 			{
 				$sObjectType = $_POST['ObjectName'];
-				$oObject = call_user_func($sObjectType . '::createInstance');
-
-				$aMap = $oObject->GetMap();
+				
+				$oObject = \AEntity::createInstance($sObjectType);
+				
+				$aMap = $oObject->getMap();
 				
 				$aViewProperties = array_keys($aMap);
 
