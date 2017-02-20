@@ -46,7 +46,7 @@
 	
 	CScreen.prototype.fillData = function (aData)
 	{
-		if (aData && aData.Values.length > 0)
+		if (aData && aData.Values && aData.Values.length > 0)
 		{
 			this.propsList(_.map(aData.Fields, function (sValue, sKey) {
 				return sKey;
