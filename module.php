@@ -16,7 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-class EavObjectViewerModule extends AApiModule
+namespace Aurora\Modules;
+
+class EavObjectViewerModule extends \AApiModule
 {
 	public function init() 
 	{
