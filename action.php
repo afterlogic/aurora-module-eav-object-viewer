@@ -18,7 +18,7 @@
 
 require_once "../../common.php";
 include_once AURORA_APP_ROOT_PATH.'system/api.php';
-\CApi::Init(true);
+\Aurora\System\Api::Init(true);
 
 $response = array(
 	'error' => true,
@@ -26,7 +26,7 @@ $response = array(
 	'result' => array()
 );
 
-$oManagerApi = \CApi::GetSystemManager('eav', 'db');
+$oManagerApi = \Aurora\System\Api::GetSystemManager('eav', 'db');
 
 if (isset($_POST['action']))
 {
