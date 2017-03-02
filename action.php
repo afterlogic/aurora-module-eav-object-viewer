@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright Copyright (c) 2016, Afterlogic Corp.
+ * @copyright Copyright (c) 2017, Afterlogic Corp.
  * @license AGPL-3.0
  *
  * This code is free software: you can redistribute it and/or modify
@@ -44,7 +44,7 @@ if (isset($_POST['action']))
 			{
 				$sObjectType = $_POST['ObjectName'];
 				
-				$oObject = \CEntity::createInstance($sObjectType);
+				$oObject = \Aurora\System\EAV\Entity::createInstance($sObjectType);
 				
 				$aMap = $oObject->getMap();
 				
