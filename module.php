@@ -18,7 +18,7 @@
 
 namespace Aurora\Modules;
 
-class EavObjectViewerModule extends \Aurora\System\AbstractModule
+class EavObjectViewerModule extends \Aurora\System\Module\AbstractModule
 {
 	public function init() 
 	{
@@ -33,12 +33,12 @@ class EavObjectViewerModule extends \Aurora\System\AbstractModule
 			\Aurora\System\Api::checkUserRoleIsAtLeast(\EUserRole::SuperAdmin);
 			$bIsAdmin = true;
 		}
-		catch (\System\Exceptions\ApiException $oEcxeption) {}
+		catch (\Aurora\System\Exceptions\ApiException $oEcxeption) {}
 		
 		if ($bIsAdmin)
 		{
 			$oCoreClientModule = \Aurora\System\Api::GetModule('CoreWebclient');
-			if ($oCoreClientModule instanceof \Aurora\System\AbstractModule) 
+			if ($oCoreClientModule instanceof \Aurora\System\Module\AbstractModule) 
 			{
 				return file_get_contents($this->GetPath().'/templates/Index.html');
 			}
