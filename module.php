@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-namespace Aurora\Modules;
+namespace Aurora\Modules\EavObjectViewer;
 
-class EavObjectViewerModule extends \Aurora\System\Module\AbstractModule
+class Module extends \Aurora\System\Module\AbstractModule
 {
 	public function init() 
 	{
