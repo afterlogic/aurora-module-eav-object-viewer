@@ -16,8 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-require_once "../../common.php";
-include_once AURORA_APP_ROOT_PATH.'system/api.php';
+require_once "../../system/autoload.php";
 \Aurora\System\Api::Init(true);
 
 $response = array(
