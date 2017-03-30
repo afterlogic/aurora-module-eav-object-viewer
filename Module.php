@@ -18,6 +18,9 @@
 
 namespace Aurora\Modules\EavObjectViewer;
 
+/**
+ * @package Modules
+ */
 class Module extends \Aurora\System\Module\AbstractModule
 {
 	public function init() 
