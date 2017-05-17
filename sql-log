@@ -1,0 +1,356 @@
+
+(SELECT DISTINCT name FROM au_eav_attributes_int as attrs, au_eav_entities as entities
+	WHERE entity_type = 'CContact' AND entities.id = attrs.id_entity)
+UNION
+
+(SELECT DISTINCT name FROM au_eav_attributes_string as attrs, au_eav_entities as entities
+	WHERE entity_type = 'CContact' AND entities.id = attrs.id_entity)
+UNION
+
+(SELECT DISTINCT name FROM au_eav_attributes_text as attrs, au_eav_entities as entities
+	WHERE entity_type = 'CContact' AND entities.id = attrs.id_entity)
+UNION
+
+(SELECT DISTINCT name FROM au_eav_attributes_bool as attrs, au_eav_entities as entities
+	WHERE entity_type = 'CContact' AND entities.id = attrs.id_entity)
+UNION
+
+(SELECT DISTINCT name FROM au_eav_attributes_datetime as attrs, au_eav_entities as entities
+	WHERE entity_type = 'CContact' AND entities.id = attrs.id_entity)
+
+
+SELECT 
+	entities.id as entity_id, 
+	entities.uuid as entity_uuid, 
+	entities.entity_type, 
+	entities.module_name as entity_module
+	# fields
+	, 
+	`attrs_BirthDay`.`value` as `attr_BirthDay`, 
+	`attrs_BirthMonth`.`value` as `attr_BirthMonth`, 
+	`attrs_BirthYear`.`value` as `attr_BirthYear`, 
+	`attrs_Frequency`.`value` as `attr_Frequency`, 
+	`attrs_IdTenant`.`value` as `attr_IdTenant`, 
+	`attrs_IdUser`.`value` as `attr_IdUser`, 
+	`attrs_PrimaryAddress`.`value` as `attr_PrimaryAddress`, 
+	`attrs_PrimaryEmail`.`value` as `attr_PrimaryEmail`, 
+	`attrs_PrimaryPhone`.`value` as `attr_PrimaryPhone`, 
+	`attrs_BusinessAddress`.`value` as `attr_BusinessAddress`, 
+	`attrs_BusinessCity`.`value` as `attr_BusinessCity`, 
+	`attrs_BusinessCompany`.`value` as `attr_BusinessCompany`, 
+	`attrs_BusinessCountry`.`value` as `attr_BusinessCountry`, 
+	`attrs_BusinessDepartment`.`value` as `attr_BusinessDepartment`, 
+	`attrs_BusinessEmail`.`value` as `attr_BusinessEmail`, 
+	`attrs_BusinessFax`.`value` as `attr_BusinessFax`, 
+	`attrs_BusinessJobTitle`.`value` as `attr_BusinessJobTitle`, 
+	`attrs_BusinessOffice`.`value` as `attr_BusinessOffice`, 
+	`attrs_BusinessPhone`.`value` as `attr_BusinessPhone`, 
+	`attrs_BusinessState`.`value` as `attr_BusinessState`, 
+	`attrs_BusinessWeb`.`value` as `attr_BusinessWeb`, 
+	`attrs_BusinessZip`.`value` as `attr_BusinessZip`, 
+	`attrs_ETag`.`value` as `attr_ETag`, 
+	`attrs_Facebook`.`value` as `attr_Facebook`, 
+	`attrs_FirstName`.`value` as `attr_FirstName`, 
+	`attrs_FullName`.`value` as `attr_FullName`, 
+	`attrs_LastName`.`value` as `attr_LastName`, 
+	`attrs_NickName`.`value` as `attr_NickName`, 
+	`attrs_Notes`.`value` as `attr_Notes`, 
+	`attrs_OtherEmail`.`value` as `attr_OtherEmail`, 
+	`attrs_PersonalAddress`.`value` as `attr_PersonalAddress`, 
+	`attrs_PersonalCity`.`value` as `attr_PersonalCity`, 
+	`attrs_PersonalCountry`.`value` as `attr_PersonalCountry`, 
+	`attrs_PersonalEmail`.`value` as `attr_PersonalEmail`, 
+	`attrs_PersonalFax`.`value` as `attr_PersonalFax`, 
+	`attrs_PersonalMobile`.`value` as `attr_PersonalMobile`, 
+	`attrs_PersonalPhone`.`value` as `attr_PersonalPhone`, 
+	`attrs_PersonalState`.`value` as `attr_PersonalState`, 
+	`attrs_PersonalWeb`.`value` as `attr_PersonalWeb`, 
+	`attrs_PersonalZip`.`value` as `attr_PersonalZip`, 
+	`attrs_Skype`.`value` as `attr_Skype`, 
+	`attrs_Storage`.`value` as `attr_Storage`, 
+	`attrs_Title`.`value` as `attr_Title`, 
+	`attrs_ViewEmail`.`value` as `attr_ViewEmail`, 
+	`attrs_Auto`.`value` as `attr_Auto`, 
+	`attrs_UseFriendlyName`.`value` as `attr_UseFriendlyName` #1
+	# ------
+FROM au_eav_entities as entities
+	# fields
+	
+	LEFT JOIN au_eav_attributes_int as `attrs_BirthDay` 
+		ON `attrs_BirthDay`.name = 'BirthDay' AND `attrs_BirthDay`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_int as `attrs_BirthMonth` 
+		ON `attrs_BirthMonth`.name = 'BirthMonth' AND `attrs_BirthMonth`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_int as `attrs_BirthYear` 
+		ON `attrs_BirthYear`.name = 'BirthYear' AND `attrs_BirthYear`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_int as `attrs_Frequency` 
+		ON `attrs_Frequency`.name = 'Frequency' AND `attrs_Frequency`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_int as `attrs_IdTenant` 
+		ON `attrs_IdTenant`.name = 'IdTenant' AND `attrs_IdTenant`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_int as `attrs_IdUser` 
+		ON `attrs_IdUser`.name = 'IdUser' AND `attrs_IdUser`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_int as `attrs_PrimaryAddress` 
+		ON `attrs_PrimaryAddress`.name = 'PrimaryAddress' AND `attrs_PrimaryAddress`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_int as `attrs_PrimaryEmail` 
+		ON `attrs_PrimaryEmail`.name = 'PrimaryEmail' AND `attrs_PrimaryEmail`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_int as `attrs_PrimaryPhone` 
+		ON `attrs_PrimaryPhone`.name = 'PrimaryPhone' AND `attrs_PrimaryPhone`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_BusinessAddress` 
+		ON `attrs_BusinessAddress`.name = 'BusinessAddress' AND `attrs_BusinessAddress`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_BusinessCity` 
+		ON `attrs_BusinessCity`.name = 'BusinessCity' AND `attrs_BusinessCity`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_BusinessCompany` 
+		ON `attrs_BusinessCompany`.name = 'BusinessCompany' AND `attrs_BusinessCompany`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_BusinessCountry` 
+		ON `attrs_BusinessCountry`.name = 'BusinessCountry' AND `attrs_BusinessCountry`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_BusinessDepartment` 
+		ON `attrs_BusinessDepartment`.name = 'BusinessDepartment' AND `attrs_BusinessDepartment`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_BusinessEmail` 
+		ON `attrs_BusinessEmail`.name = 'BusinessEmail' AND `attrs_BusinessEmail`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_BusinessFax` 
+		ON `attrs_BusinessFax`.name = 'BusinessFax' AND `attrs_BusinessFax`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_BusinessJobTitle` 
+		ON `attrs_BusinessJobTitle`.name = 'BusinessJobTitle' AND `attrs_BusinessJobTitle`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_BusinessOffice` 
+		ON `attrs_BusinessOffice`.name = 'BusinessOffice' AND `attrs_BusinessOffice`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_BusinessPhone` 
+		ON `attrs_BusinessPhone`.name = 'BusinessPhone' AND `attrs_BusinessPhone`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_BusinessState` 
+		ON `attrs_BusinessState`.name = 'BusinessState' AND `attrs_BusinessState`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_BusinessWeb` 
+		ON `attrs_BusinessWeb`.name = 'BusinessWeb' AND `attrs_BusinessWeb`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_BusinessZip` 
+		ON `attrs_BusinessZip`.name = 'BusinessZip' AND `attrs_BusinessZip`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_ETag` 
+		ON `attrs_ETag`.name = 'ETag' AND `attrs_ETag`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_Facebook` 
+		ON `attrs_Facebook`.name = 'Facebook' AND `attrs_Facebook`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_FirstName` 
+		ON `attrs_FirstName`.name = 'FirstName' AND `attrs_FirstName`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_FullName` 
+		ON `attrs_FullName`.name = 'FullName' AND `attrs_FullName`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_LastName` 
+		ON `attrs_LastName`.name = 'LastName' AND `attrs_LastName`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_NickName` 
+		ON `attrs_NickName`.name = 'NickName' AND `attrs_NickName`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_Notes` 
+		ON `attrs_Notes`.name = 'Notes' AND `attrs_Notes`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_OtherEmail` 
+		ON `attrs_OtherEmail`.name = 'OtherEmail' AND `attrs_OtherEmail`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_PersonalAddress` 
+		ON `attrs_PersonalAddress`.name = 'PersonalAddress' AND `attrs_PersonalAddress`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_PersonalCity` 
+		ON `attrs_PersonalCity`.name = 'PersonalCity' AND `attrs_PersonalCity`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_PersonalCountry` 
+		ON `attrs_PersonalCountry`.name = 'PersonalCountry' AND `attrs_PersonalCountry`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_PersonalEmail` 
+		ON `attrs_PersonalEmail`.name = 'PersonalEmail' AND `attrs_PersonalEmail`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_PersonalFax` 
+		ON `attrs_PersonalFax`.name = 'PersonalFax' AND `attrs_PersonalFax`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_PersonalMobile` 
+		ON `attrs_PersonalMobile`.name = 'PersonalMobile' AND `attrs_PersonalMobile`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_PersonalPhone` 
+		ON `attrs_PersonalPhone`.name = 'PersonalPhone' AND `attrs_PersonalPhone`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_PersonalState` 
+		ON `attrs_PersonalState`.name = 'PersonalState' AND `attrs_PersonalState`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_PersonalWeb` 
+		ON `attrs_PersonalWeb`.name = 'PersonalWeb' AND `attrs_PersonalWeb`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_PersonalZip` 
+		ON `attrs_PersonalZip`.name = 'PersonalZip' AND `attrs_PersonalZip`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_Skype` 
+		ON `attrs_Skype`.name = 'Skype' AND `attrs_Skype`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_Storage` 
+		ON `attrs_Storage`.name = 'Storage' AND `attrs_Storage`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_Title` 
+		ON `attrs_Title`.name = 'Title' AND `attrs_Title`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_ViewEmail` 
+		ON `attrs_ViewEmail`.name = 'ViewEmail' AND `attrs_ViewEmail`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_bool as `attrs_Auto` 
+		ON `attrs_Auto`.name = 'Auto' AND `attrs_Auto`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_bool as `attrs_UseFriendlyName` 
+		ON `attrs_UseFriendlyName`.name = 'UseFriendlyName' AND `attrs_UseFriendlyName`.id_entity = entities.id #2
+	# ------
+
+WHERE entities.entity_type = 'CContact' #3 ENTITY TYPE
+	 #4 WHERE
+GROUP BY entity_id, entity_uuid, entity_type, entity_module, `attr_BirthDay`, `attr_BirthMonth`, `attr_BirthYear`, `attr_Frequency`, `attr_IdTenant`, `attr_IdUser`, `attr_PrimaryAddress`, `attr_PrimaryEmail`, `attr_PrimaryPhone`, `attr_BusinessAddress`, `attr_BusinessCity`, `attr_BusinessCompany`, `attr_BusinessCountry`, `attr_BusinessDepartment`, `attr_BusinessEmail`, `attr_BusinessFax`, `attr_BusinessJobTitle`, `attr_BusinessOffice`, `attr_BusinessPhone`, `attr_BusinessState`, `attr_BusinessWeb`, `attr_BusinessZip`, `attr_ETag`, `attr_Facebook`, `attr_FirstName`, `attr_FullName`, `attr_LastName`, `attr_NickName`, `attr_Notes`, `attr_OtherEmail`, `attr_PersonalAddress`, `attr_PersonalCity`, `attr_PersonalCountry`, `attr_PersonalEmail`, `attr_PersonalFax`, `attr_PersonalMobile`, `attr_PersonalPhone`, `attr_PersonalState`, `attr_PersonalWeb`, `attr_PersonalZip`, `attr_Skype`, `attr_Storage`, `attr_Title`, `attr_ViewEmail`, `attr_Auto`, `attr_UseFriendlyName` #5 
+ ORDER BY entity_id ASC #6 SORT
+ #7 LIMIT
+ #8 OFFSET
+
+(SELECT DISTINCT name FROM au_eav_attributes_int as attrs, au_eav_entities as entities
+	WHERE entity_type = 'CContact' AND entities.id = attrs.id_entity)
+UNION
+
+(SELECT DISTINCT name FROM au_eav_attributes_string as attrs, au_eav_entities as entities
+	WHERE entity_type = 'CContact' AND entities.id = attrs.id_entity)
+UNION
+
+(SELECT DISTINCT name FROM au_eav_attributes_text as attrs, au_eav_entities as entities
+	WHERE entity_type = 'CContact' AND entities.id = attrs.id_entity)
+UNION
+
+(SELECT DISTINCT name FROM au_eav_attributes_bool as attrs, au_eav_entities as entities
+	WHERE entity_type = 'CContact' AND entities.id = attrs.id_entity)
+UNION
+
+(SELECT DISTINCT name FROM au_eav_attributes_datetime as attrs, au_eav_entities as entities
+	WHERE entity_type = 'CContact' AND entities.id = attrs.id_entity)
+
+
+SELECT 
+	entities.id as entity_id, 
+	entities.uuid as entity_uuid, 
+	entities.entity_type, 
+	entities.module_name as entity_module
+	# fields
+	, 
+	`attrs_BirthDay`.`value` as `attr_BirthDay`, 
+	`attrs_BirthMonth`.`value` as `attr_BirthMonth`, 
+	`attrs_BirthYear`.`value` as `attr_BirthYear`, 
+	`attrs_Frequency`.`value` as `attr_Frequency`, 
+	`attrs_IdTenant`.`value` as `attr_IdTenant`, 
+	`attrs_IdUser`.`value` as `attr_IdUser`, 
+	`attrs_PrimaryAddress`.`value` as `attr_PrimaryAddress`, 
+	`attrs_PrimaryEmail`.`value` as `attr_PrimaryEmail`, 
+	`attrs_PrimaryPhone`.`value` as `attr_PrimaryPhone`, 
+	`attrs_BusinessAddress`.`value` as `attr_BusinessAddress`, 
+	`attrs_BusinessCity`.`value` as `attr_BusinessCity`, 
+	`attrs_BusinessCompany`.`value` as `attr_BusinessCompany`, 
+	`attrs_BusinessCountry`.`value` as `attr_BusinessCountry`, 
+	`attrs_BusinessDepartment`.`value` as `attr_BusinessDepartment`, 
+	`attrs_BusinessEmail`.`value` as `attr_BusinessEmail`, 
+	`attrs_BusinessFax`.`value` as `attr_BusinessFax`, 
+	`attrs_BusinessJobTitle`.`value` as `attr_BusinessJobTitle`, 
+	`attrs_BusinessOffice`.`value` as `attr_BusinessOffice`, 
+	`attrs_BusinessPhone`.`value` as `attr_BusinessPhone`, 
+	`attrs_BusinessState`.`value` as `attr_BusinessState`, 
+	`attrs_BusinessWeb`.`value` as `attr_BusinessWeb`, 
+	`attrs_BusinessZip`.`value` as `attr_BusinessZip`, 
+	`attrs_ETag`.`value` as `attr_ETag`, 
+	`attrs_Facebook`.`value` as `attr_Facebook`, 
+	`attrs_FirstName`.`value` as `attr_FirstName`, 
+	`attrs_FullName`.`value` as `attr_FullName`, 
+	`attrs_LastName`.`value` as `attr_LastName`, 
+	`attrs_NickName`.`value` as `attr_NickName`, 
+	`attrs_Notes`.`value` as `attr_Notes`, 
+	`attrs_OtherEmail`.`value` as `attr_OtherEmail`, 
+	`attrs_PersonalAddress`.`value` as `attr_PersonalAddress`, 
+	`attrs_PersonalCity`.`value` as `attr_PersonalCity`, 
+	`attrs_PersonalCountry`.`value` as `attr_PersonalCountry`, 
+	`attrs_PersonalEmail`.`value` as `attr_PersonalEmail`, 
+	`attrs_PersonalFax`.`value` as `attr_PersonalFax`, 
+	`attrs_PersonalMobile`.`value` as `attr_PersonalMobile`, 
+	`attrs_PersonalPhone`.`value` as `attr_PersonalPhone`, 
+	`attrs_PersonalState`.`value` as `attr_PersonalState`, 
+	`attrs_PersonalWeb`.`value` as `attr_PersonalWeb`, 
+	`attrs_PersonalZip`.`value` as `attr_PersonalZip`, 
+	`attrs_Skype`.`value` as `attr_Skype`, 
+	`attrs_Storage`.`value` as `attr_Storage`, 
+	`attrs_Title`.`value` as `attr_Title`, 
+	`attrs_ViewEmail`.`value` as `attr_ViewEmail`, 
+	`attrs_Auto`.`value` as `attr_Auto`, 
+	`attrs_UseFriendlyName`.`value` as `attr_UseFriendlyName` #1
+	# ------
+FROM au_eav_entities as entities
+	# fields
+	
+	LEFT JOIN au_eav_attributes_int as `attrs_BirthDay` 
+		ON `attrs_BirthDay`.name = 'BirthDay' AND `attrs_BirthDay`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_int as `attrs_BirthMonth` 
+		ON `attrs_BirthMonth`.name = 'BirthMonth' AND `attrs_BirthMonth`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_int as `attrs_BirthYear` 
+		ON `attrs_BirthYear`.name = 'BirthYear' AND `attrs_BirthYear`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_int as `attrs_Frequency` 
+		ON `attrs_Frequency`.name = 'Frequency' AND `attrs_Frequency`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_int as `attrs_IdTenant` 
+		ON `attrs_IdTenant`.name = 'IdTenant' AND `attrs_IdTenant`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_int as `attrs_IdUser` 
+		ON `attrs_IdUser`.name = 'IdUser' AND `attrs_IdUser`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_int as `attrs_PrimaryAddress` 
+		ON `attrs_PrimaryAddress`.name = 'PrimaryAddress' AND `attrs_PrimaryAddress`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_int as `attrs_PrimaryEmail` 
+		ON `attrs_PrimaryEmail`.name = 'PrimaryEmail' AND `attrs_PrimaryEmail`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_int as `attrs_PrimaryPhone` 
+		ON `attrs_PrimaryPhone`.name = 'PrimaryPhone' AND `attrs_PrimaryPhone`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_BusinessAddress` 
+		ON `attrs_BusinessAddress`.name = 'BusinessAddress' AND `attrs_BusinessAddress`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_BusinessCity` 
+		ON `attrs_BusinessCity`.name = 'BusinessCity' AND `attrs_BusinessCity`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_BusinessCompany` 
+		ON `attrs_BusinessCompany`.name = 'BusinessCompany' AND `attrs_BusinessCompany`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_BusinessCountry` 
+		ON `attrs_BusinessCountry`.name = 'BusinessCountry' AND `attrs_BusinessCountry`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_BusinessDepartment` 
+		ON `attrs_BusinessDepartment`.name = 'BusinessDepartment' AND `attrs_BusinessDepartment`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_BusinessEmail` 
+		ON `attrs_BusinessEmail`.name = 'BusinessEmail' AND `attrs_BusinessEmail`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_BusinessFax` 
+		ON `attrs_BusinessFax`.name = 'BusinessFax' AND `attrs_BusinessFax`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_BusinessJobTitle` 
+		ON `attrs_BusinessJobTitle`.name = 'BusinessJobTitle' AND `attrs_BusinessJobTitle`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_BusinessOffice` 
+		ON `attrs_BusinessOffice`.name = 'BusinessOffice' AND `attrs_BusinessOffice`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_BusinessPhone` 
+		ON `attrs_BusinessPhone`.name = 'BusinessPhone' AND `attrs_BusinessPhone`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_BusinessState` 
+		ON `attrs_BusinessState`.name = 'BusinessState' AND `attrs_BusinessState`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_BusinessWeb` 
+		ON `attrs_BusinessWeb`.name = 'BusinessWeb' AND `attrs_BusinessWeb`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_BusinessZip` 
+		ON `attrs_BusinessZip`.name = 'BusinessZip' AND `attrs_BusinessZip`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_ETag` 
+		ON `attrs_ETag`.name = 'ETag' AND `attrs_ETag`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_Facebook` 
+		ON `attrs_Facebook`.name = 'Facebook' AND `attrs_Facebook`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_FirstName` 
+		ON `attrs_FirstName`.name = 'FirstName' AND `attrs_FirstName`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_FullName` 
+		ON `attrs_FullName`.name = 'FullName' AND `attrs_FullName`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_LastName` 
+		ON `attrs_LastName`.name = 'LastName' AND `attrs_LastName`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_NickName` 
+		ON `attrs_NickName`.name = 'NickName' AND `attrs_NickName`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_Notes` 
+		ON `attrs_Notes`.name = 'Notes' AND `attrs_Notes`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_OtherEmail` 
+		ON `attrs_OtherEmail`.name = 'OtherEmail' AND `attrs_OtherEmail`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_PersonalAddress` 
+		ON `attrs_PersonalAddress`.name = 'PersonalAddress' AND `attrs_PersonalAddress`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_PersonalCity` 
+		ON `attrs_PersonalCity`.name = 'PersonalCity' AND `attrs_PersonalCity`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_PersonalCountry` 
+		ON `attrs_PersonalCountry`.name = 'PersonalCountry' AND `attrs_PersonalCountry`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_PersonalEmail` 
+		ON `attrs_PersonalEmail`.name = 'PersonalEmail' AND `attrs_PersonalEmail`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_PersonalFax` 
+		ON `attrs_PersonalFax`.name = 'PersonalFax' AND `attrs_PersonalFax`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_PersonalMobile` 
+		ON `attrs_PersonalMobile`.name = 'PersonalMobile' AND `attrs_PersonalMobile`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_PersonalPhone` 
+		ON `attrs_PersonalPhone`.name = 'PersonalPhone' AND `attrs_PersonalPhone`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_PersonalState` 
+		ON `attrs_PersonalState`.name = 'PersonalState' AND `attrs_PersonalState`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_PersonalWeb` 
+		ON `attrs_PersonalWeb`.name = 'PersonalWeb' AND `attrs_PersonalWeb`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_PersonalZip` 
+		ON `attrs_PersonalZip`.name = 'PersonalZip' AND `attrs_PersonalZip`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_Skype` 
+		ON `attrs_Skype`.name = 'Skype' AND `attrs_Skype`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_Storage` 
+		ON `attrs_Storage`.name = 'Storage' AND `attrs_Storage`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_Title` 
+		ON `attrs_Title`.name = 'Title' AND `attrs_Title`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_string as `attrs_ViewEmail` 
+		ON `attrs_ViewEmail`.name = 'ViewEmail' AND `attrs_ViewEmail`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_bool as `attrs_Auto` 
+		ON `attrs_Auto`.name = 'Auto' AND `attrs_Auto`.id_entity = entities.id 
+	LEFT JOIN au_eav_attributes_bool as `attrs_UseFriendlyName` 
+		ON `attrs_UseFriendlyName`.name = 'UseFriendlyName' AND `attrs_UseFriendlyName`.id_entity = entities.id #2
+	# ------
+
+WHERE entities.entity_type = 'CContact' #3 ENTITY TYPE
+	 #4 WHERE
+GROUP BY entity_id, entity_uuid, entity_type, entity_module, `attr_BirthDay`, `attr_BirthMonth`, `attr_BirthYear`, `attr_Frequency`, `attr_IdTenant`, `attr_IdUser`, `attr_PrimaryAddress`, `attr_PrimaryEmail`, `attr_PrimaryPhone`, `attr_BusinessAddress`, `attr_BusinessCity`, `attr_BusinessCompany`, `attr_BusinessCountry`, `attr_BusinessDepartment`, `attr_BusinessEmail`, `attr_BusinessFax`, `attr_BusinessJobTitle`, `attr_BusinessOffice`, `attr_BusinessPhone`, `attr_BusinessState`, `attr_BusinessWeb`, `attr_BusinessZip`, `attr_ETag`, `attr_Facebook`, `attr_FirstName`, `attr_FullName`, `attr_LastName`, `attr_NickName`, `attr_Notes`, `attr_OtherEmail`, `attr_PersonalAddress`, `attr_PersonalCity`, `attr_PersonalCountry`, `attr_PersonalEmail`, `attr_PersonalFax`, `attr_PersonalMobile`, `attr_PersonalPhone`, `attr_PersonalState`, `attr_PersonalWeb`, `attr_PersonalZip`, `attr_Skype`, `attr_Storage`, `attr_Title`, `attr_ViewEmail`, `attr_Auto`, `attr_UseFriendlyName` #5 
+ ORDER BY entity_id ASC #6 SORT
+ #7 LIMIT
+ #8 OFFSET
