@@ -25,7 +25,7 @@ class Module extends \Aurora\System\Module\AbstractModule
 		$bIsAdmin = false;
 		try
 		{
-			\Aurora\System\Api::checkUserRoleIsAtLeast(\EUserRole::SuperAdmin);
+			\Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::SuperAdmin);
 			$bIsAdmin = true;
 		}
 		catch (\Aurora\System\Exceptions\ApiException $oEcxeption) {}
