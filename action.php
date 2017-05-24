@@ -17,7 +17,7 @@ $response = array(
 	'result' => array()
 );
 
-$oManagerApi = \Aurora\System\Api::GetSystemManager('eav', 'db');
+$oManagerApi = new \Aurora\System\Managers\Eav\Manager();
 
 if (isset($_POST['action']))
 {
