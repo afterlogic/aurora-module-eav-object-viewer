@@ -17,7 +17,7 @@ $response = array(
 	'result' => array()
 );
 
-$oManagerApi = new \Aurora\System\Managers\Eav\Manager();
+$oManagerApi = new \Aurora\System\Managers\Eav();
 
 if (isset($_POST['action']))
 {
