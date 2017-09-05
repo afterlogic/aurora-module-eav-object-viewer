@@ -120,7 +120,7 @@ if (isset($_POST['action']))
 							}
 							$aResultItems['Fields'][$sKey] = $sType;
 						}
-						if ($_POST['ObjectName'] == 'CAccount') 
+						if ($_POST['ObjectName'] == '\\Aurora\\Modules\\StandardAuth\\Classes\\Account') 
 						{
 							$itemData['Password'] = htmlspecialchars($itemData['Password']);
 						}
