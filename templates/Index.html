@@ -52,7 +52,7 @@
 								</a>
 							</li>
 						</ul>
-						<div data-bind="visible: propsList().length > 0">
+						<div data-bind=" visible: propsList().length > 0">
 							<select data-bind="options: propsList, value: searchField"></select>							
 							<input data-bind="textInput: searchText"/>
 							<button data-bind="click: searchClick"/>Search</button>

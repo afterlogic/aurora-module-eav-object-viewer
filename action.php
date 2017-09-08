@@ -24,10 +24,15 @@ if (isset($_POST['action']))
 	switch ($_POST['action'])
 	{
 		case 'types':
+			$aTypes = $oManagerApi->getTypes();
+			$aTypes = array_map(function($sValue) {
+				return str_replace('\\', '_', $sValue);
+			}, $aTypes);
+			
 			$response = [
 				'error' => false,
 				'message'=> '',
-				'result' => $oManagerApi->getTypes()
+				'result' => $aTypes
 			];			
 			break;
 		case 'edit':
@@ -94,6 +99,7 @@ if (isset($_POST['action']))
 			break;
 			
 		case 'list':
+			
 			if (isset($_POST['ObjectName']))
 			{
 				$aResultItems = array();
@@ -104,7 +110,10 @@ if (isset($_POST['action']))
 					$aFilters = [$_POST['searchField'] => ['%'.$_POST['searchText'].'%', 'LIKE']];
 				}
 				
-				$aItems = $oManagerApi->getEntities($_POST['ObjectName'], array(), 0, 0, $aFilters);
+//				$sObjectType = 	$_POST['ObjectName'];
+				$sObjectType = 	str_replace('_', '\\', $_POST['ObjectName']);
+				$aItems = $oManagerApi->getEntities($sObjectType, array(), 0, 0, $aFilters);
+			
 				if (is_array($aItems))
 				{
 					foreach ($aItems as $oItem)
@@ -120,7 +129,7 @@ if (isset($_POST['action']))
 							}
 							$aResultItems['Fields'][$sKey] = $sType;
 						}
-						if ($_POST['ObjectName'] == '\\Aurora\\Modules\\StandardAuth\\Classes\\Account') 
+						if ($sObjectType === 'Aurora\Modules\StandardAuth\Classes\Account') 
 						{
 							$itemData['Password'] = htmlspecialchars($itemData['Password']);
 						}

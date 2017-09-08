@@ -51,9 +51,11 @@
 			this.propsList(_.map(aData.Fields, function (sValue, sKey) {
 				return sKey;
 			}));
+			
 			this.propsTypeList(_.map(aData.Fields, function (sValue) {
 				return sValue;
 			}));
+			
 			this.objectsList(_.map(aData.Values, function (oItem) {
 				return _.values(oItem);
 			}));
@@ -123,8 +125,7 @@
 		this.searchText('');
 		this.selectedItem(null);
 		this.checkedItems([]);
-		this.selectedObjectName(sTabName);
-		
+
 		$.ajax({
 			url: 'modules/EavObjectViewer/action.php',
 			context: this,
