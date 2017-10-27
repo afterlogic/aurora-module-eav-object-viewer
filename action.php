@@ -112,7 +112,15 @@ if (isset($_POST['action']))
 				
 //				$sObjectType = 	$_POST['ObjectName'];
 				$sObjectType = 	str_replace('_', '\\', $_POST['ObjectName']);
-				$aItems = $oManagerApi->getEntities($sObjectType, array(), 0, 0, $aFilters);
+				$aItems = $oManagerApi->getEntities(
+					$sObjectType, 
+					array(), 
+					0, 
+					999, 
+					$aFilters,
+					array(), 
+					\Aurora\System\Enums\SortOrder::DESC
+				);
 			
 				if (is_array($aItems))
 				{
@@ -121,12 +129,8 @@ if (isset($_POST['action']))
 						$itemData = $oItem->toArray();
 						foreach ($itemData as $sKey => $mValue)
 						{
-							$sType = 'string';
 							$oAttribute = $oItem->getAttribute($sKey);
-							if ($oAttribute)
-							{
-								$sType = $oAttribute->Type;
-							}
+							$sType = ($oAttribute) ? $oAttribute->Type : 'string';
 							$aResultItems['Fields'][$sKey] = $sType;
 						}
 						if ($sObjectType === 'Aurora\Modules\StandardAuth\Classes\Account') 
