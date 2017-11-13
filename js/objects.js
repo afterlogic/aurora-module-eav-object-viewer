@@ -40,8 +40,9 @@
 				'action': 'types'
 			},
 			complete: self.ajaxTypesResponse,
-			timeout: 1000
+			timeout: 10000
 		});
+		return false;
 	};
 	
 	CScreen.prototype.fillData = function (aData)
@@ -135,8 +136,9 @@
 				'ObjectName': sTabName
 			},
 			complete: self.ajaxResponse,
-			timeout: 1000
+			timeout: 10000
 		});
+		return false;
 	};
 	
 	CScreen.prototype.searchClick = function ()
@@ -156,8 +158,9 @@
 				'searchText': this.searchText()
 			},
 			complete: self.ajaxResponse,
-			timeout: 1000
+			timeout: 10000
 		});
+		return false;
 	};
 	
 	CScreen.prototype.ajaxTypesResponse = function (jqXHR, textStatus) {
@@ -197,8 +200,9 @@
 			type: 'POST',
 			data: oRequest,
 			complete: self.onPostResponse,
-			timeout: 1000
+			timeout: 10000
 		});
+		return false;
 	};
 	
 	CScreen.prototype.onPostResponse = function (jqXHR, textStatus) {

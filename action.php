@@ -24,10 +24,9 @@ if (isset($_POST['action']))
 	switch ($_POST['action'])
 	{
 		case 'types':
-			$aTypes = $oManagerApi->getTypes();
 			$aTypes = array_map(function($sValue) {
 				return str_replace('\\', '_', $sValue);
-			}, $aTypes);
+			}, $oManagerApi->getTypes());
 			
 			$response = [
 				'error' => false,
@@ -129,8 +128,7 @@ if (isset($_POST['action']))
 						$itemData = $oItem->toArray();
 						foreach ($itemData as $sKey => $mValue)
 						{
-							$oAttribute = $oItem->getAttribute($sKey);
-							$sType = ($oAttribute) ? $oAttribute->Type : 'string';
+							$sType = $oItem->getType($sKey);
 							$aResultItems['Fields'][$sKey] = $sType;
 						}
 						if ($sObjectType === 'Aurora\Modules\StandardAuth\Classes\Account') 
