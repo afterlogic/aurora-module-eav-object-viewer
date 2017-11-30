@@ -33,7 +33,7 @@
 			self = this
 		;
 		$.ajax({
-			url: 'modules/EavObjectViewer/action.php',
+			url: '?eav-viewer-action',
 			context: this,
 			type: 'POST',
 			data: {
@@ -128,7 +128,7 @@
 		this.checkedItems([]);
 
 		$.ajax({
-			url: 'modules/EavObjectViewer/action.php',
+			url: '?eav-viewer-action',
 			context: this,
 			type: 'POST',
 			data: {
@@ -148,7 +148,7 @@
 		;
 		
 		$.ajax({
-			url: 'modules/EavObjectViewer/action.php',
+			url: '?eav-viewer-action',
 			context: this,
 			type: 'POST',
 			data: {
@@ -195,7 +195,7 @@
 		;
 
 		$.ajax({
-			url: 'modules/EavObjectViewer/action.php',
+			url: '?eav-viewer-action',
 			context: this,
 			type: 'POST',
 			data: oRequest,
