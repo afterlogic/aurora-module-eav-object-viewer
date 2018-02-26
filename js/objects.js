@@ -126,6 +126,7 @@
 		this.searchText('');
 		this.selectedItem(null);
 		this.checkedItems([]);
+		this.selectedObjectName(sTabName);
 
 		$.ajax({
 			url: '?eav-viewer-action',

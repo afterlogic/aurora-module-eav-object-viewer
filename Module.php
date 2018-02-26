@@ -51,13 +51,14 @@ class Module extends \Aurora\System\Module\AbstractModule
 
 		if (isset($_POST['action']))
 		{
+			$result = false;
+			$response = [];			
 			switch ($_POST['action'])
 			{
 				case 'types':
 					$aTypes = array_map(function($sValue) {
 						return str_replace('\\', '_', $sValue);
 					}, $oManagerApi->getTypes());
-
 					$response = [
 						'error' => false,
 						'message'=> '',
@@ -104,7 +105,7 @@ class Module extends \Aurora\System\Module\AbstractModule
 					break;
 
 				case 'delete':
-					$oManagerApi->deleteEntity($_POST['EntityId']);
+					$result = $oManagerApi->deleteEntity($_POST['EntityId']);
 					break;
 
 				case 'delete_multiple':
@@ -112,6 +113,7 @@ class Module extends \Aurora\System\Module\AbstractModule
 					{
 						$aIds = explode(',', $_POST['ids']);
 					}
+					$result = true;
 					foreach ($aIds as $id) 
 					{
 						if (!$oManagerApi->deleteEntity((int)$id))
@@ -138,8 +140,8 @@ class Module extends \Aurora\System\Module\AbstractModule
 							$aFilters = [$_POST['searchField'] => ['%'.$_POST['searchText'].'%', 'LIKE']];
 						}
 
-		//				$sObjectType = 	$_POST['ObjectName'];
 						$sObjectType = 	str_replace('_', '\\', $_POST['ObjectName']);
+						
 						$aItems = $oManagerApi->getEntities(
 							$sObjectType, 
 							array(), 
@@ -152,19 +154,30 @@ class Module extends \Aurora\System\Module\AbstractModule
 
 						if (is_array($aItems))
 						{
+							$aAttributes = $oManagerApi->getAttributesNamesByEntityType($sObjectType);
+							
 							foreach ($aItems as $oItem)
 							{
-								$itemData = $oItem->toArray();
-								foreach ($itemData as $sKey => $mValue)
+								$aResultItem = [];
+								foreach ($aAttributes as $sAttribute)
 								{
-									$sType = $oItem->getType($sKey);
-									$aResultItems['Fields'][$sKey] = $sType;
+									if (isset($oItem->{$sAttribute}))
+									{
+										$sType = $oItem->getType($sAttribute);
+										$aResultItems['Fields'][$sAttribute] = $sType;
+										if ($sObjectType === 'Aurora\Modules\StandardAuth\Classes\Account') 
+										{
+											$itemData['Password'] = htmlspecialchars($itemData['Password']);
+										}
+										$aResultItem[$sAttribute] = $oItem->{$sAttribute};
+									}
+									else
+									{
+										$aResultItem[$sAttribute] = '';
+									}
+									
 								}
-								if ($sObjectType === 'Aurora\Modules\StandardAuth\Classes\Account') 
-								{
-									$itemData['Password'] = htmlspecialchars($itemData['Password']);
-								}
-								$aResultItems['Values'][] = $itemData;
+								$aResultItems['Values'][] = $aResultItem;
 							}
 
 							$response = [
