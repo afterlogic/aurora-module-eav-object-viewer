@@ -146,10 +146,10 @@ class Module extends \Aurora\System\Module\AbstractModule
 							$sObjectType, 
 							array(), 
 							0, 
-							999, 
+							99, 
 							$aFilters,
 							array(), 
-							\Aurora\System\Enums\SortOrder::DESC
+							\Aurora\System\Enums\SortOrder::ASC
 						);
 
 						if (is_array($aItems))
@@ -158,13 +158,19 @@ class Module extends \Aurora\System\Module\AbstractModule
 							
 							foreach ($aItems as $oItem)
 							{
-								$aResultItem = [];
+								$aResultItem = [
+									'EntityId' => $oItem->EntityId,
+									'UUID' => $oItem->UUID
+								];
+								$aResultItems['Fields'] = [
+									'EntityId' => 'int',
+									'UUID' => 'string'
+								];
 								foreach ($aAttributes as $sAttribute)
 								{
 									if (isset($oItem->{$sAttribute}))
 									{
-										$sType = $oItem->getType($sAttribute);
-										$aResultItems['Fields'][$sAttribute] = $sType;
+										$aResultItems['Fields'][$sAttribute] = $oItem->getType($sAttribute);
 										if ($sObjectType === 'Aurora\Modules\StandardAuth\Classes\Account') 
 										{
 											$itemData['Password'] = htmlspecialchars($itemData['Password']);
@@ -173,6 +179,7 @@ class Module extends \Aurora\System\Module\AbstractModule
 									}
 									else
 									{
+										$aResultItems['Fields'][$sAttribute] = 'string';
 										$aResultItem[$sAttribute] = '';
 									}
 									
