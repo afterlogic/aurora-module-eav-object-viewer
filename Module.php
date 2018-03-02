@@ -138,13 +138,16 @@ class Module extends \Aurora\System\Module\AbstractModule
 						$oEntity = new $sObjectType('Core');
 						
 						$aFilters = array();
-						if ($oEntity->isStringAttribute($_POST['searchField']))
+						if (!empty($_POST['searchField']))
 						{
-							$aFilters = [$_POST['searchField'] => ['%'.$_POST['searchText'].'%', 'LIKE']];
-						}
-						else if ($oEntity->getType($_POST['searchField']) === 'int')
-						{
-							$aFilters = [$_POST['searchField'] => [(int)$_POST['searchText'], '=']];
+							if ($oEntity->isStringAttribute($_POST['searchField']))
+							{
+								$aFilters = [$_POST['searchField'] => ['%'.$_POST['searchText'].'%', 'LIKE']];
+							}
+							else if ($oEntity->getType($_POST['searchField']) === 'int')
+							{
+								$aFilters = [$_POST['searchField'] => [(int)$_POST['searchText'], '=']];
+							}
 						}
 						
 						$aItems = $oManagerApi->getEntities(
