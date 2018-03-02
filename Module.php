@@ -68,7 +68,7 @@ class Module extends \Aurora\System\Module\AbstractModule
 				case 'edit':
 					if ($_POST['ObjectName'])
 					{
-						$sObjectType = $_POST['ObjectName'];
+						$sObjectType = str_replace('_', '\\', $_POST['ObjectName']);
 
 						$oObject = \Aurora\System\EAV\Entity::createInstance($sObjectType);
 
@@ -82,7 +82,7 @@ class Module extends \Aurora\System\Module\AbstractModule
 
 							foreach ($aViewProperties as $property)
 							{
-								if ($_POST[$property])
+								if (!empty($_POST[$property]))
 								{
 									$oObject->{$property} = $_POST[$property];
 								}
@@ -134,13 +134,18 @@ class Module extends \Aurora\System\Module\AbstractModule
 					{
 						$aResultItems = array();
 
+						$sObjectType = 	str_replace('_', '\\', $_POST['ObjectName']);
+						$oEntity = new $sObjectType('Core');
+						
 						$aFilters = array();
-						if (isset($_POST['searchField'], $_POST['searchText']))
+						if ($oEntity->isStringAttribute($_POST['searchField']))
 						{
 							$aFilters = [$_POST['searchField'] => ['%'.$_POST['searchText'].'%', 'LIKE']];
 						}
-
-						$sObjectType = 	str_replace('_', '\\', $_POST['ObjectName']);
+						else if ($oEntity->getType($_POST['searchField']) === 'int')
+						{
+							$aFilters = [$_POST['searchField'] => [(int)$_POST['searchText'], '=']];
+						}
 						
 						$aItems = $oManagerApi->getEntities(
 							$sObjectType, 
@@ -173,9 +178,12 @@ class Module extends \Aurora\System\Module\AbstractModule
 										$aResultItems['Fields'][$sAttribute] = $oItem->getType($sAttribute);
 										if ($sObjectType === 'Aurora\Modules\StandardAuth\Classes\Account') 
 										{
-											$itemData['Password'] = htmlspecialchars($itemData['Password']);
+											$aResultItem[$sAttribute] = htmlspecialchars($oItem->{$sAttribute});
 										}
-										$aResultItem[$sAttribute] = $oItem->{$sAttribute};
+										else
+										{
+											$aResultItem[$sAttribute] = $oItem->{$sAttribute};
+										}
 									}
 									else
 									{
