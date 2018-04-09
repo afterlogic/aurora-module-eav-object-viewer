@@ -36,7 +36,10 @@ class Module extends \Aurora\System\Module\AbstractModule
 			$oCoreClientModule = \Aurora\System\Api::GetModule('CoreWebclient');
 			if ($oCoreClientModule instanceof \Aurora\System\Module\AbstractModule) 
 			{
-				return file_get_contents($this->GetPath().'/templates/Index.html');
+				$sTemplateContent = file_get_contents($this->GetPath().'/templates/Index.html');
+				$sTemplateContent = str_replace('%MODULE_PATH%', 'modules/EavObjectViewer', $sTemplateContent);
+				
+				return $sTemplateContent;
 			}
 		}
 		else
@@ -210,5 +213,5 @@ class Module extends \Aurora\System\Module\AbstractModule
 		}		
 		
 		return json_encode($response, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
-	}	
+	}
 }
