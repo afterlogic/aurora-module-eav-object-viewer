@@ -51,7 +51,7 @@ class Module extends \Aurora\System\Module\AbstractModule
 	
 	public function EntryEavObjectViewerAction()
 	{
-		$oManagerApi = new \Aurora\System\Managers\Eav();
+		$oManagerApi = \Aurora\System\Managers\Eav::getInstance();
 
 		if (isset($_POST['action']))
 		{
