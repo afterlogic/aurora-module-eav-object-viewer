@@ -1,6 +1,6 @@
 <?php
 /**
- * This code is licensed under AGPLv3 license or Afterlogic Software License
+ * This code is licensed under AGPLv3 license or AfterLogic Software License
  * if commercial version of the product was purchased.
  * For full statements of the licenses see LICENSE-AFTERLOGIC and LICENSE-AGPL3 files.
  */
@@ -9,8 +9,8 @@ namespace Aurora\Modules\EavObjectViewer;
 
 /**
  * @license https://www.gnu.org/licenses/agpl-3.0.html AGPL-3.0
- * @license https://afterlogic.com/products/common-licensing Afterlogic Software License
- * @copyright Copyright (c) 2019, Afterlogic Corp.
+ * @license https://afterlogic.com/products/common-licensing AfterLogic Software License
+ * @copyright Copyright (c) 2018, Afterlogic Corp.
  *
  * @package Modules
  */
@@ -38,14 +38,8 @@ class Module extends \Aurora\System\Module\AbstractModule
 			if ($oCoreClientModule instanceof \Aurora\System\Module\AbstractModule) 
 			{
 				$sTemplateContent = file_get_contents($this->GetPath().'/dist/index.html');
-				//$sTemplateContent = '<div src="/app.js"></div>';
-				$sTemplateContent = str_replace('src=css', 'src=modules/EavObjectViewer/dist/css', $sTemplateContent);
-				$sTemplateContent = str_replace('src=/js', 'src=modules/EavObjectViewer/dist/js', $sTemplateContent);
-				$sTemplateContent = str_replace('href=/js', 'href=modules/EavObjectViewer/dist/js', $sTemplateContent);
-				$sTemplateContent = str_replace('href=/css', 'href=modules/EavObjectViewer/dist/css', $sTemplateContent);
-				
-				// var_dump($sTemplateContent);
-				// exit;
+				$sTemplateContent = str_replace('%MODULE_PATH%', 'modules/EavObjectViewer', $sTemplateContent);
+				var_dump($sTemplateContent);
 				
 				return $sTemplateContent;
 			}
@@ -58,27 +52,8 @@ class Module extends \Aurora\System\Module\AbstractModule
 	
 	public function EntryEavObjectViewerAction()
 	{
-		if (isset($_SERVER['HTTP_ORIGIN'])) {
-		  // Decide if the origin in $_SERVER['HTTP_ORIGIN'] is one
-		  // you want to allow, and if so:
-		  header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
-		  header('Access-Control-Allow-Credentials: true');
-		}
+		$oManagerApi = \Aurora\System\Managers\Eav::getInstance();
 
-		if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-		  if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) {
-			// may also be using PUT, PATCH, HEAD etc
-			header('Access-Control-Allow-Methods: GET, POST, OPTIONS');         
-		  }
-		  
-		  if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])) {
-			header("Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
-		  }
-
-		  exit(0);
-		}
-		
-		$oManagerApi = new \Aurora\System\Managers\Eav();
 		if (isset($_POST['action']))
 		{
 			$result = false;
@@ -96,7 +71,6 @@ class Module extends \Aurora\System\Module\AbstractModule
 					];			
 					break;
 				case 'edit':
-				
 					if ($_POST['ObjectName'])
 					{
 						$sObjectType = str_replace('_', '\\', $_POST['ObjectName']);
@@ -107,21 +81,15 @@ class Module extends \Aurora\System\Module\AbstractModule
 
 						$aViewProperties = array_keys($aMap);
 
-						if ($_POST['properties'])
+						if ($_POST['EntityId'])
 						{
-							$properties = json_decode($_POST['properties']);
-							
-							if (isset($properties->EntityId))
-							{
-								$oObject->EntityId = (int)$properties->EntityId;
+							$oObject->EntityId = (int)$_POST['EntityId'];
 
-								foreach ($aViewProperties as $propertyName)
+							foreach ($aViewProperties as $property)
+							{
+								if (!empty($_POST[$property]))
 								{
-									// if (!empty($_POST[$property]))
-									if (isset($properties->{$propertyName}))
-									{
-										$oObject->{$propertyName} = $properties->{$propertyName};
-									}
+									$oObject->{$property} = $_POST[$property];
 								}
 							}
 						}
@@ -141,18 +109,16 @@ class Module extends \Aurora\System\Module\AbstractModule
 					}
 					break;
 
-				// case 'delete':
-					// $result = $oManagerApi->deleteEntity($_POST['EntityId']);
-					// break;
-
-				// case 'delete_multiple':
 				case 'delete':
+					$result = $oManagerApi->deleteEntity($_POST['EntityId']);
+					break;
+
+				case 'delete_multiple':
 					if ($_POST['ids'])
 					{
 						$aIds = explode(',', $_POST['ids']);
 					}
 					$result = true;
-
 					foreach ($aIds as $id) 
 					{
 						if (!$oManagerApi->deleteEntity((int)$id))
@@ -171,9 +137,6 @@ class Module extends \Aurora\System\Module\AbstractModule
 				case 'list':
 					if (isset($_POST['ObjectName']))
 					{
-						$offset = $_POST['offset'];
-						$limit = $_POST['limit'];
-						
 						$aResultItems = array();
 
 						$sObjectType = 	str_replace('_', '\\', $_POST['ObjectName']);
@@ -195,16 +158,11 @@ class Module extends \Aurora\System\Module\AbstractModule
 						$aItems = $oManagerApi->getEntities(
 							$sObjectType, 
 							array(), 
-							$offset, 
-							$limit, 
+							0, 
+							99, 
 							$aFilters,
 							array(), 
 							\Aurora\System\Enums\SortOrder::ASC
-						);
-						
-						$iItemsCount = $oManagerApi->getEntitiesCount(
-							$sObjectType, 
-							$aFilters
 						);
 
 						if (is_array($aItems))
@@ -245,16 +203,15 @@ class Module extends \Aurora\System\Module\AbstractModule
 								$aResultItems['Values'][] = $aResultItem;
 							}
 							
-							$aResultItems['pagination'] = array(
-								'total' => $iItemsCount,
-								//'per_page' => 2,
-								//'current_page' => 1,
-								//'last_page' => 2,
-								//'next_page_url' => 'asdasd',
-								//'prev_page_url' => 'asdasd1',
-								'from' => $offset,
-								'to' => $offset + $limit
-							);
+
+							$aResultItems['total'] = 4;
+							$aResultItems['per_page'] = 2;
+							$aResultItems['current_page'] = 1;
+							$aResultItems['last_page'] = 2;
+							$aResultItems['next_page_url'] = '';
+							$aResultItems['prev_page_url'] = '';
+							$aResultItems['from'] = '1';
+							$aResultItems['to'] = '2';
 
 							$response = [
 								'error' => false,
