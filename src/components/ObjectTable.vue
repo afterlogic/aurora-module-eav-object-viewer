@@ -9,27 +9,30 @@
         @vuetable-pagination:change-page="onChangePage"
       ></vuetable-pagination>
     </div>
-    <vuetable ref="vuetable" v-show="!loading"
-      :api-url="apiUrl"
-      :fields="fields"
-      data-path="result.Values"
-      pagination-path="result.pagination"
-      http-method="post"
-      :http-fetch="getObjectData"
-      :per-page="perPage"
-      track-by="EntityId"
-      @vuetable:pagination-data="onPaginationData"
-      @vuetable:checkbox-toggled="onCheckboxToggled"
-      @vuetable:checkbox-toggled-all="onCheckboxToggled"
-      @vuetable:row-dblclicked="onRowClick"
-    >
-      <template slot="actions" scope="props">
-        <div class="table-button-container">
-          <!-- <button class="ui button" @click="editRow(props.rowData, props)">Edit</button> -->
-          <button class="ui basic red button" @click="deleteRow(props.rowData)">Delete</button>
-        </div>
-      </template>
-    </vuetable>
+    <div class="table-container">
+      <vuetable ref="vuetable" v-show="!loading"
+        :api-url="apiUrl"
+        :fields="fields"
+        data-path="result.Values"
+        pagination-path="result.pagination"
+        http-method="post"
+        :http-fetch="getObjectData"
+        :per-page="perPage"
+        track-by="EntityId"
+        @vuetable:pagination-data="onPaginationData"
+        @vuetable:checkbox-toggled="onCheckboxToggled"
+        @vuetable:checkbox-toggled-all="onCheckboxToggled"
+        @vuetable:row-dblclicked="onRowClick"
+      >
+        <template slot="actions" scope="props">
+          <div class="table-button-container">
+            <!-- <button class="ui button" @click="editRow(props.rowData, props)">Edit</button> -->
+            <button class="ui basic red button" @click="deleteRow(props.rowData)">Delete</button>
+          </div>
+        </template>
+      </vuetable>
+
+    </div>
     <div class="table-button-container" v-if="selectedEntityIds.length > 0">
       Selected items EntityId: {{selectedEntityIds}}
       <button class="ui basic red button" @click="deleteRows">Delete</button>
@@ -270,5 +273,12 @@ export default {
 }
 .main-panel {
   padding: 20px 40px;
+  overflow: auto;
+}
+.table-container {
+  overflow: auto;
+  padding: 1px;
+}
+.ui.attached.table {
 }
 </style>

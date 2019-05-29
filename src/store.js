@@ -21,7 +21,7 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    getObjectsList({ commit, state }, data) {
+    getObjectsList({ commit }) {
       axios({
         url: `${config.ApiUrl}-action`,
         method: 'post',

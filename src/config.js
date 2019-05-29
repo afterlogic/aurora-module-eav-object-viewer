@@ -1,3 +1,3 @@
 export default {
-  ApiUrl: '/?eav-viewer',
+  ApiUrl: '?eav-viewer',
 };

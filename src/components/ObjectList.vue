@@ -1,6 +1,5 @@
 <template>
   <div class="list">
-    <h1>{{ msg }}</h1>
     <ul>
       <li v-for="item in items" @click="openList(item)" :class="{'selected': currObject === item.value}">{{ item.name }}</li>
     </ul>
@@ -57,8 +56,11 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 .list {
-  padding: 20px 0px;
+  padding: 80px 0px 20px;
   background: #eee;
+  min-width: 200px;
+  overflow-y: auto;
+  flex-shrink: 0;
 
   ul {
     list-style-type: none;
@@ -69,6 +71,7 @@ export default {
       cursor: pointer;
       margin: 0px;
       padding: 4px 16px;
+      white-space: nowrap;
 
       &:hover {
         background: #ddd;
