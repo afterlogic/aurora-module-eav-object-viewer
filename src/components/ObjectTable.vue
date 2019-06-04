@@ -31,22 +31,29 @@
           </div>
         </template>
       </vuetable>
-
     </div>
     <div class="table-button-container" v-if="selectedEntityIds.length > 0">
       Selected items EntityId: {{selectedEntityIds}}
       <button class="ui basic red button" @click="deleteRows">Delete</button>
     </div>
-    <sweet-modal ref="modalEditor" width="600px" blocking>
+    <sweet-modal ref="modalEditor" width="800px" blocking overlay-theme="dark">
       <div>
         <h2>{{title}}</h2>
         <form class="ui form">
-          <div class="field" v-for="field in editedRow">
-            <label>{{field.name}}</label>
-            <input type="text" v-model="field.value" />
+          <div class="buttons">
+            <button class="ui primary button" @click="saveData">Save</button>
+            <button class="ui button" @click="onCancelEdit">cancel</button>
           </div>
-          <button class="ui primary button" @click="saveData">Save</button>
-          <button class="ui button" @click="onCancelEdit">cancel</button>
+          <div class="grid stackable two column ui">
+              <div class="column field" v-for="(field, index) in editedRow">
+                <label>{{field.name}}</label>
+                <input type="text" v-model="field.value" />
+              </div>
+          </div>
+          <div class="buttons">
+            <button class="ui primary button" @click="saveData">Save</button>
+            <button class="ui button" @click="onCancelEdit">cancel</button>
+          </div>
         </form>
       </div>
     </sweet-modal>
@@ -159,6 +166,7 @@ export default {
       });
       this.fields = fields;
       this.fields.push('__slot:actions');
+      console.log('fields', fields);
     },
     // inputRender(value) {
     //   return '<input v-model="'+value+'" />';
@@ -280,5 +288,9 @@ export default {
   padding: 1px;
 }
 .ui.attached.table {
+}
+.sweet-content-content .buttons {
+  text-align: right;
+  margin: 0px 0px 10px;
 }
 </style>
