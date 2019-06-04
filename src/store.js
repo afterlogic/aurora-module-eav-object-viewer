@@ -7,6 +7,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    apiUrl: config.ApiUrl,
     objectsList: null,
     currentObjectName: '',
   },
@@ -19,11 +20,20 @@ export default new Vuex.Store({
       // eslint-disable-next-line no-param-reassign
       state.currentObjectName = v;
     },
+    setAppUrl(state, v) {
+      // eslint-disable-next-line no-param-reassign
+      state.apiUrl = v;
+    },
   },
   actions: {
-    getObjectsList({ commit }) {
+    setAppUrl({ commit }, data) {
+      // eslint-disable-next-line no-param-reassign
+      console.log('setAppUrl', data);
+      commit('setAppUrl', data);
+    },
+    getObjectsList({ commit, state }) {
       axios({
-        url: `${config.ApiUrl}-action`,
+        url: `${state.apiUrl}-action`,
         method: 'post',
         // headers: { 'Content-Type': 'text/plain' },
         data: 'action=types',

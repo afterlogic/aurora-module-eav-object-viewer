@@ -1,5 +1,8 @@
 <template>
   <div class="list">
+    <div class="ui input fluid">
+      <input v-model="apiUrlInput" type="text" @keypress.13="onApiUrlEnter" />
+    </div>
     <ul>
       <li v-for="item in items" @click="openList(item)" :class="{'selected': currObject === item.value}">{{ item.name }}</li>
     </ul>
@@ -16,12 +19,29 @@ export default {
   },
   data() {
     return {
+      apiUrlInput: '',
       items: [
         'obj1',
         'obj2',
       ],
       currObject: null,
     };
+  },
+  watch: {
+    '$store.state.currentObjectName' (v) {
+      this.currObject = v;
+    },
+    '$store.state.objectsList' (v) {
+      this.createObjectList(v);
+    },
+    '$store.state.apiUrl' (v) {
+      this.apiUrlInput = v;
+      this.$store.dispatch('getObjectsList');
+    },
+  },
+  mounted: function (params) {
+    this.apiUrlInput = this.$store.state.apiUrl;
+    console.log();
   },
   methods: {
     createObjectList (v) {
@@ -41,13 +61,8 @@ export default {
     openList (item) {
       this.$router.push({ name: 'ObjectTable', params: { id: item.value}})
     },
-  },
-  watch: {
-    '$store.state.currentObjectName' (v) {
-      this.currObject = v;
-    },
-    '$store.state.objectsList' (v) {
-      this.createObjectList(v);
+    onApiUrlEnter () {
+      this.$store.dispatch('setAppUrl', this.apiUrlInput);
     },
   },
 };
@@ -56,11 +71,15 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 .list {
-  padding: 80px 0px 20px;
+  padding: 20px 0px 20px;
   background: #eee;
-  min-width: 200px;
+  min-width: 300px;
   overflow-y: auto;
   flex-shrink: 0;
+
+  .input {
+    margin: 0px 10px 20px;
+  }
 
   ul {
     list-style-type: none;

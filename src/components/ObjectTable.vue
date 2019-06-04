@@ -1,18 +1,23 @@
 <template>
   <div class="main-panel ui">
     <h1>{{title}}</h1>
-    <div v-if="loading">Loading...</div>
     <div class="vuetable-pagination ui basic segment grid">
+      <select v-model="searchField" style="width: 250px; min-height:46px;">
+        <option value="">None</option>
+        <option v-for="field in fields" :value="field">{{field}}</option>
+      </select>
+      <input type="text" placeholder="Search" v-model="searchText" @keypress.13="onEnter"/>
       <vuetable-pagination-info ref="paginationInfo"
       ></vuetable-pagination-info>
       <vuetable-pagination ref="pagination"
         @vuetable-pagination:change-page="onChangePage"
       ></vuetable-pagination>
     </div>
+    <div v-if="loading">Loading...</div>
     <div class="table-container">
       <vuetable ref="vuetable" v-show="!loading"
         :api-url="apiUrl"
-        :fields="fields"
+        :fields="tableHeaders"
         data-path="result.Values"
         pagination-path="result.pagination"
         http-method="post"
@@ -42,17 +47,17 @@
         <form class="ui form">
           <div class="buttons">
             <button class="ui primary button" @click="saveData">Save</button>
-            <button class="ui button" @click="onCancelEdit">cancel</button>
+            <button class="ui button" @click="onCancelEdit">Cancel</button>
           </div>
           <div class="grid stackable two column ui">
-              <div class="column field" v-for="(field, index) in editedRow">
+              <div class="column field" v-for="field in editedRow">
                 <label>{{field.name}}</label>
                 <input type="text" v-model="field.value" />
               </div>
           </div>
           <div class="buttons">
             <button class="ui primary button" @click="saveData">Save</button>
-            <button class="ui button" @click="onCancelEdit">cancel</button>
+            <button class="ui button" @click="onCancelEdit">Cancel</button>
           </div>
         </form>
       </div>
@@ -66,7 +71,7 @@ import Vuetable from 'vuetable-2/src/components/Vuetable';
 import VuetablePagination from 'vuetable-2/src/components/VuetablePagination';
 import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo';
 import InputString from '@/components/InputString.vue';
-import config from '@/config';
+import config from '@/config.js';
 import axios from 'axios';
 import { EventBus } from '@/Events.js';
 
@@ -86,17 +91,20 @@ export default {
   data() {
     return {
       'fields': [],
+      'tableHeaders': [],
       'currPage': 1,
       'perPage': 10,
       'loading': false,
       'selectedEntityIds': [],
-      editedRow: [],
+      'searchField': '',
+      'searchText': '',
+      'editedRow': [],
     };
   },
   computed: {
     // get only
     apiUrl: function () {
-      return `${config.ApiUrl}-action`
+      return `${this.$store.state.apiUrl}-action`
     },
     title: function () {
       return this.id.replace('Aurora_Modules', '').replace(/_/g, ' ');
@@ -121,7 +129,7 @@ export default {
     },
   },
   methods: {
-    getObjectData (apiUrl, httpOptions) {
+    getObjectData (url, httpOptions) {
       this.$refs.vuetable.selectedTo = [];
       this.selectedEntityIds = [];
 
@@ -129,10 +137,10 @@ export default {
       let iOffset = (this.currPage-1)*this.perPage;
       let self = this;
       let aObj = axios({
-        url: `${config.ApiUrl}-action`,
+        url: `${this.apiUrl}`,
         method: 'post',
         // headers: { 'Content-Type': 'text/plain' },
-        data: `action=list&ObjectName=${this.id}&offset=${iOffset}&limit=${this.perPage}`,
+        data: `action=list&ObjectName=${this.id}&offset=${iOffset}&limit=${this.perPage}&searchField=${this.searchField}&searchText=${this.searchText}`,
       })
       aObj.then(function (response) {
         self.loading = false;
@@ -147,26 +155,9 @@ export default {
       return aObj;
     },
     setFields(data){
-      let fields = ['__checkbox'];
-
-      _.each(data, function (value, key) {
-        // if (value === 'string') {
-        //   fields.push({
-        //     name: '__component:input-string',
-        //     // name: key,
-        //     sortField: key,
-        //     title: key,
-        //     // callback: 'inputRender'
-        //     // titleClass: 'center aligned',
-        //     // dataClass: 'center aligned'
-        //   });
-        // } else {
-          fields.push(key);
-        // }
-      });
+      let fields = _.keys(data);
       this.fields = fields;
-      this.fields.push('__slot:actions');
-      console.log('fields', fields);
+      this.tableHeaders = _.concat('__checkbox', '__slot:actions', fields);
     },
     // inputRender(value) {
     //   return '<input v-model="'+value+'" />';
@@ -180,7 +171,7 @@ export default {
     deleteRow(rowData){
       if (rowData.EntityId > 0 && confirm(`The object with the EntityId: ${rowData.EntityId} will be deleted`)) {
         axios({
-          url: `${config.ApiUrl}-action`,
+          url: `${this.apiUrl}`,
           method: 'post',
           // headers: { 'Content-Type': 'text/plain' },
           data: `action=delete&ids=${rowData.EntityId}`,
@@ -196,8 +187,8 @@ export default {
       this.selectedEntityIds = this.$refs.vuetable.selectedTo;
     },
     onPaginationData (paginationData) {
-      paginationData['next_page_url'] = `${config.ApiUrl}-action`;
-      paginationData['prev_page_url'] = `${config.ApiUrl}-action`;
+      paginationData['next_page_url'] = `${this.apiUrl}`;
+      paginationData['prev_page_url'] = `${this.apiUrl}`;
       paginationData['last_page'] = Math.ceil(paginationData['total'] / this.perPage);
       paginationData['current_page'] = this.currPage;
 
@@ -217,7 +208,7 @@ export default {
     deleteRows () {
       if (this.selectedEntityIds.length > 0 && confirm(`The objects with the following EntityIds will be deleted: ${this.selectedEntityIds.join()}`)) {
         axios({
-          url: `${config.ApiUrl}-action`,
+          url: `${this.apiUrl}`,
           method: 'post',
           // headers: { 'Content-Type': 'text/plain' },
           data: `action=delete&ids=${this.selectedEntityIds.join(',')}`,
@@ -238,7 +229,7 @@ export default {
       let properties = JSON.stringify(dataForSave);
 
       axios({
-        url: `${config.ApiUrl}-action`,
+        url: `${this.apiUrl}`,
         method: 'post',
         // headers: { 'Content-Type': 'text/plain' },
         // data: `action=edit&manager=objects&ObjectName=${this.id}&${dataForSave.join('&')}`,
@@ -268,6 +259,9 @@ export default {
       this.editedRow = [];
       this.$refs.modalEditor.close();
     },
+    onEnter() {
+      this.$refs.vuetable.reload();
+    },
   },
 };
 </script>
@@ -286,8 +280,6 @@ export default {
 .table-container {
   overflow: auto;
   padding: 1px;
-}
-.ui.attached.table {
 }
 .sweet-content-content .buttons {
   text-align: right;
