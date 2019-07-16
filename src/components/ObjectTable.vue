@@ -2,13 +2,20 @@
   <div class="main-panel ui">
     <h1>{{title}}</h1>
     <div class="vuetable-pagination ui basic segment grid">
-      <select v-model="searchField" style="width: 250px; min-height:46px;">
+      <select class="ui dropdown" v-model="searchField" style="width: 250px; min-height:46px;">
         <option value="">None</option>
-        <option v-for="field in fields" :value="field">{{field}}</option>
+        <option v-for="(field, index) in fields" :value="field" :key="index">{{field}}</option>
       </select>
-      <input type="text" placeholder="Search" v-model="searchText" @keypress.13="onEnter"/>
+      <div class="ui icon input">
+        <input type="text" placeholder="Search" v-model="searchText" @keypress.13="onEnter"/>
+      </div>
+    </div>
+    <div class="vuetable-pagination ui basic segment grid"  v-if="!loading">
       <vuetable-pagination-info ref="paginationInfo"
       ></vuetable-pagination-info>
+      <div class="ui icon input">
+        <input type="text" placeholder="Per page" v-model="perPageInput" @keypress.13="onEnter"/>
+      </div>
       <vuetable-pagination ref="pagination"
         @vuetable-pagination:change-page="onChangePage"
       ></vuetable-pagination>
@@ -22,7 +29,7 @@
         pagination-path="result.pagination"
         http-method="post"
         :http-fetch="getObjectData"
-        :per-page="perPage"
+        :per-page="1*perPage"
         track-by="EntityId"
         @vuetable:pagination-data="onPaginationData"
         @vuetable:checkbox-toggled="onCheckboxToggled"
@@ -50,7 +57,7 @@
             <button class="ui button" @click="onCancelEdit">Cancel</button>
           </div>
           <div class="grid stackable two column ui">
-              <div class="column field" v-for="field in editedRow">
+              <div class="column field" v-for="(field,index) in editedRow" :key="index">
                 <label>{{field.name}}</label>
                 <input type="text" v-model="field.value" />
               </div>
@@ -66,16 +73,11 @@
 </template>
 
 <script>
-import Vue from 'vue';
-import Vuetable from 'vuetable-2/src/components/Vuetable';
-import VuetablePagination from 'vuetable-2/src/components/VuetablePagination';
-import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo';
-import InputString from '@/components/InputString.vue';
-import config from '@/config.js';
+import Vuetable from 'vuetable-2/src/components/Vuetable.vue';
+import VuetablePagination from 'vuetable-2/src/components/VuetablePagination.vue';
+import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo.vue';
 import axios from 'axios';
-import { EventBus } from '@/Events.js';
-
-Vue.component('input-string', InputString);
+import _ from 'lodash';
 
 export default {
   name: 'ObjectTable',
@@ -83,92 +85,81 @@ export default {
     Vuetable,
     VuetablePagination,
     VuetablePaginationInfo,
-    InputString,
   },
   props: {
-    'id': String,
+    id: String,
   },
   data() {
     return {
-      'fields': [],
-      'tableHeaders': [],
-      'currPage': 1,
-      'perPage': 10,
-      'loading': false,
-      'selectedEntityIds': [],
-      'searchField': '',
-      'searchText': '',
-      'editedRow': [],
+      fields: [],
+      tableHeaders: [],
+      currPage: 1,
+      // 'perPage': 10,
+      perPageInput: '10',
+      loading: false,
+      selectedEntityIds: [],
+      searchField: '',
+      searchText: '',
+      editedRow: [],
     };
   },
   computed: {
     // get only
-    apiUrl: function () {
-      return `${this.$store.state.apiUrl}-action`
+    apiUrl() {
+      return `${this.$store.state.apiUrl}-action`;
     },
-    title: function () {
+    title() {
       return this.id.replace('Aurora_Modules', '').replace(/_/g, ' ');
     },
-  },
-  mounted: function (params) {
-    // this.$refs.vuetable.setData([{'name': 1, 'test': 'aa'},{'name': 2, 'test': 'bb'}]);
-    
-    // EventBus.$on('onCellEdit', data => {
-      // console.log('onCellEdit', data);
-      // this.value = data;
-    // });
-  },
-  beforeDestroy () {
-    // EventBus.$off('onCellEdit');
+    perPage() {
+      let
+        newValue = 10;
+      const currValue = parseInt(Number(this.perPageInput), 10);
+      if (!isNaN(currValue) && currValue > 0) {
+        newValue = currValue;
+      }
+
+      return newValue;
+    },
   },
   watch: {
-    id: function(v) {
-      // this.getObjectData(v);
+    id(v) {
       this.$refs.vuetable.reload();
       this.$store.dispatch('setObjectsName', v);
     },
   },
   methods: {
-    getObjectData (url, httpOptions) {
+    getObjectData() {
       this.$refs.vuetable.selectedTo = [];
       this.selectedEntityIds = [];
 
       this.loading = true;
-      let iOffset = (this.currPage-1)*this.perPage;
-      let self = this;
-      let aObj = axios({
+      const iOffset = (this.currPage - 1) * parseInt(this.perPage, 10);
+      const self = this;
+      const aObj = axios({
         url: `${this.apiUrl}`,
         method: 'post',
         // headers: { 'Content-Type': 'text/plain' },
         data: `action=list&ObjectName=${this.id}&offset=${iOffset}&limit=${this.perPage}&searchField=${this.searchField}&searchText=${this.searchText}`,
-      })
-      aObj.then(function (response) {
+      });
+      aObj.then((response) => {
         self.loading = false;
         self.setFields(response.data.result.Fields);
-        
-        self.$nextTick(function() {
-            // this is required because vuetable uses tableFields internally, not fields
-            self.$refs.vuetable.normalizeFields()
-            // self.$refs.vuetable.reload()
-        })
-      })
+
+        self.$nextTick(() => {
+          // this is required because vuetable uses tableFields internally, not fields
+          self.$refs.vuetable.normalizeFields();
+          // self.$refs.vuetable.reload()
+        });
+      });
       return aObj;
     },
-    setFields(data){
-      let fields = _.keys(data);
+    setFields(data) {
+      const fields = _.keys(data);
       this.fields = fields;
       this.tableHeaders = _.concat('__checkbox', '__slot:actions', fields);
     },
-    // inputRender(value) {
-    //   return '<input v-model="'+value+'" />';
-    // },
-//     editRow(rowData, t){
-      
-//       console.log('editRow', this.$refs.vuetable);
-//       console.log('editRow', rowData, t);
-// //      alert("You clicked edit on"+ JSON.stringify(rowData))
-//     },
-    deleteRow(rowData){
+    deleteRow(rowData) {
       if (rowData.EntityId > 0 && confirm(`The object with the EntityId: ${rowData.EntityId} will be deleted`)) {
         axios({
           url: `${this.apiUrl}`,
@@ -176,36 +167,36 @@ export default {
           // headers: { 'Content-Type': 'text/plain' },
           data: `action=delete&ids=${rowData.EntityId}`,
         })
-        .then((response) => {
-          this.$nextTick(function() {
-            this.$refs.vuetable.reload()
-          })
-        })
-      };
+          .then(() => {
+            this.$nextTick(function () {
+              this.$refs.vuetable.reload();
+            });
+          });
+      }
     },
-    onCheckboxToggled(){
+    onCheckboxToggled() {
       this.selectedEntityIds = this.$refs.vuetable.selectedTo;
     },
-    onPaginationData (paginationData) {
-      paginationData['next_page_url'] = `${this.apiUrl}`;
-      paginationData['prev_page_url'] = `${this.apiUrl}`;
-      paginationData['last_page'] = Math.ceil(paginationData['total'] / this.perPage);
-      paginationData['current_page'] = this.currPage;
+    onPaginationData(paginationData) {
+      paginationData.next_page_url = `${this.apiUrl}`;
+      paginationData.prev_page_url = `${this.apiUrl}`;
+      paginationData.last_page = Math.ceil(paginationData.total / parseInt(this.perPage, 10));
+      paginationData.current_page = this.currPage;
 
-      this.$refs.pagination.setPaginationData(paginationData)
-      this.$refs.paginationInfo.setPaginationData(paginationData)
+      this.$refs.pagination.setPaginationData(paginationData);
+      this.$refs.paginationInfo.setPaginationData(paginationData);
     },
-    onChangePage (page) {
+    onChangePage(page) {
       if (page === 'next') {
-        this.currPage++;
+        this.currPage += 1;
       } else if (page === 'prev') {
-        this.currPage--;
+        this.currPage -= 1;
       } else {
         this.currPage = page;
       }
-      this.$refs.vuetable.changePage(page)
+      this.$refs.vuetable.changePage(page);
     },
-    deleteRows () {
+    deleteRows() {
       if (this.selectedEntityIds.length > 0 && confirm(`The objects with the following EntityIds will be deleted: ${this.selectedEntityIds.join()}`)) {
         axios({
           url: `${this.apiUrl}`,
@@ -213,20 +204,20 @@ export default {
           // headers: { 'Content-Type': 'text/plain' },
           data: `action=delete&ids=${this.selectedEntityIds.join(',')}`,
         })
-        .then((response) => {
-          this.$nextTick(function() {
-            this.$refs.vuetable.reload()
-          })
-        })
-      };
+          .then((response) => {
+            this.$nextTick(function () {
+              this.$refs.vuetable.reload();
+            });
+          });
+      }
     },
     saveData() {
-      let dataForSave = {};
+      const dataForSave = {};
       _.each(this.editedRow, (field) => {
         dataForSave[field.name] = field.value;
       });
 
-      let properties = JSON.stringify(dataForSave);
+      const properties = JSON.stringify(dataForSave);
 
       axios({
         url: `${this.apiUrl}`,
@@ -235,31 +226,34 @@ export default {
         // data: `action=edit&manager=objects&ObjectName=${this.id}&${dataForSave.join('&')}`,
         data: `action=edit&manager=objects&ObjectName=${this.id}&properties=${properties}`,
       })
-      .then((response) => {
-        this.$nextTick(function() {
-          this.editedRow = [];
-          this.$refs.vuetable.reload();
-          this.$refs.modalEditor.close();
-        })
-      })
+        .then(() => {
+          this.$nextTick(function () {
+            this.editedRow = [];
+            this.$refs.vuetable.reload();
+            this.$refs.modalEditor.close();
+          });
+        });
     },
     onRowClick(row) {
-      let rowData = []
+      const rowData = [];
       _.each(row, (value, key) => {
         rowData.push({
-          'name': key,
-          'value': value
-        })
+          name: key,
+          value,
+        });
       });
 
       this.editedRow = rowData;
       this.$refs.modalEditor.open();
     },
-    onCancelEdit(row) {
+    onCancelEdit() {
       this.editedRow = [];
       this.$refs.modalEditor.close();
     },
     onEnter() {
+      if (parseInt(Number(this.perPageInput), 10) !== this.perPage) {
+        this.perPageInput = this.perPage;
+      }
       this.$refs.vuetable.reload();
     },
   },
