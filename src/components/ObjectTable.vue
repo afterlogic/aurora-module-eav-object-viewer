@@ -51,7 +51,7 @@
     <sweet-modal ref="modalEditor" width="800px" blocking overlay-theme="dark">
       <div>
         <h2>{{title}}</h2>
-        <form class="ui form">
+        <div class="ui form">
           <div class="buttons">
             <button class="ui primary button" @click="saveData">Save</button>
             <button class="ui button" @click="onCancelEdit">Cancel</button>
@@ -66,7 +66,7 @@
             <button class="ui primary button" @click="saveData">Save</button>
             <button class="ui button" @click="onCancelEdit">Cancel</button>
           </div>
-        </form>
+        </div>
       </div>
     </sweet-modal>
   </div>
@@ -157,7 +157,7 @@ export default {
     setFields(data) {
       const fields = _.keys(data);
       this.fields = fields;
-      this.tableHeaders = _.concat('__checkbox', '__slot:actions', fields);
+      this.tableHeaders = _.concat('__checkbox', '__slot:actions', 'EntityId', fields);
     },
     deleteRow(rowData) {
       if (rowData.EntityId > 0 && confirm(`The object with the EntityId: ${rowData.EntityId} will be deleted`)) {
@@ -218,7 +218,7 @@ export default {
       });
 
       const properties = JSON.stringify(dataForSave);
-
+      console.log();
       axios({
         url: `${this.apiUrl}`,
         method: 'post',
