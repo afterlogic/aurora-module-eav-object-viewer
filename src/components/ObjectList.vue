@@ -20,10 +20,7 @@ export default {
   data() {
     return {
       apiUrlInput: '',
-      items: [
-        'obj1',
-        'obj2',
-      ],
+      items: [],
       currObject: null,
     };
   },
@@ -34,20 +31,15 @@ export default {
     '$store.state.objectsList' (v) {
       this.createObjectList(v);
     },
-    '$store.state.apiUrl' (v) {
-      this.apiUrlInput = v;
-      this.$store.dispatch('getObjectsList');
-    },
   },
   mounted: function (params) {
     this.apiUrlInput = this.$store.state.apiUrl;
-    console.log();
+    this.currObject = this.$store.state.currentObjectName;
   },
   methods: {
     createObjectList (v) {
       if (v) {
         let list = [];
-
         _.each(v, (item) => {
           list.push({
             'name': item.replace('Aurora_Modules', '').replace(/_/g, ' '),
@@ -59,7 +51,7 @@ export default {
       }
     },
     openList (item) {
-      this.$router.push({ name: 'ObjectTable', params: { id: item.value}})
+      this.$router.push({ name: 'ObjectTable', params: { id: item.value}});
     },
     onApiUrlEnter () {
       this.$store.dispatch('setAppUrl', this.apiUrlInput);

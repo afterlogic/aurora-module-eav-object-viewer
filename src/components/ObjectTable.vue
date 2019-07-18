@@ -21,7 +21,7 @@
       ></vuetable-pagination>
     </div>
     <div v-if="loading">Loading...</div>
-    <div class="table-container">
+    <div class="table-container" v-if="currentObjectName">
       <vuetable ref="vuetable" v-show="!loading"
         :api-url="apiUrl"
         :fields="tableHeaders"
@@ -91,6 +91,7 @@ export default {
   },
   data() {
     return {
+      currentObjectName: '',
       fields: [],
       tableHeaders: [],
       currPage: 1,
@@ -109,7 +110,7 @@ export default {
       return `${this.$store.state.apiUrl}-action`;
     },
     title() {
-      return this.id.replace('Aurora_Modules', '').replace(/_/g, ' ');
+      return this.currentObjectName.replace('Aurora_Modules', '').replace(/_/g, ' ');
     },
     perPage() {
       let
@@ -123,13 +124,21 @@ export default {
     },
   },
   watch: {
-    id(v) {
+    '$store.state.currentObjectName' (v) {
+      this.currentObjectName = v;
       this.$refs.vuetable.reload();
+    },
+    id(v) {
       this.$store.dispatch('setObjectsName', v);
     },
   },
+  mounted: function (params) {
+    console.log('mounted this.$store.state.currentObjectName', this.$store.state.currentObjectName);
+    this.currentObjectName = this.$store.state.currentObjectName;
+  },
   methods: {
     getObjectData() {
+      console.log('this.currentObjectName1', this.currentObjectName);
       this.$refs.vuetable.selectedTo = [];
       this.selectedEntityIds = [];
 
@@ -140,17 +149,20 @@ export default {
         url: `${this.apiUrl}`,
         method: 'post',
         // headers: { 'Content-Type': 'text/plain' },
-        data: `action=list&ObjectName=${this.id}&offset=${iOffset}&limit=${this.perPage}&searchField=${this.searchField}&searchText=${this.searchText}`,
+        data: `action=list&ObjectName=${this.currentObjectName}&offset=${iOffset}&limit=${this.perPage}&searchField=${this.searchField}&searchText=${this.searchText}`,
       });
       aObj.then((response) => {
         self.loading = false;
-        self.setFields(response.data.result.Fields);
 
-        self.$nextTick(() => {
-          // this is required because vuetable uses tableFields internally, not fields
-          self.$refs.vuetable.normalizeFields();
-          // self.$refs.vuetable.reload()
-        });
+        if (response.data && response.data.result && response.data.result.Fields) {
+          self.setFields(response.data.result.Fields);
+
+          self.$nextTick(() => {
+            // this is required because vuetable uses tableFields internally, not fields
+            self.$refs.vuetable.normalizeFields();
+            // self.$refs.vuetable.reload()
+          });
+        }
       });
       return aObj;
     },
@@ -178,13 +190,15 @@ export default {
       this.selectedEntityIds = this.$refs.vuetable.selectedTo;
     },
     onPaginationData(paginationData) {
-      paginationData.next_page_url = `${this.apiUrl}`;
-      paginationData.prev_page_url = `${this.apiUrl}`;
-      paginationData.last_page = Math.ceil(paginationData.total / parseInt(this.perPage, 10));
-      paginationData.current_page = this.currPage;
-
-      this.$refs.pagination.setPaginationData(paginationData);
-      this.$refs.paginationInfo.setPaginationData(paginationData);
+      if (paginationData) {
+        paginationData.next_page_url = `${this.apiUrl}`;
+        paginationData.prev_page_url = `${this.apiUrl}`;
+        paginationData.last_page = Math.ceil(paginationData.total / parseInt(this.perPage, 10));
+        paginationData.current_page = this.currPage;
+  
+        this.$refs.pagination.setPaginationData(paginationData);
+        this.$refs.paginationInfo.setPaginationData(paginationData);
+      }
     },
     onChangePage(page) {
       if (page === 'next') {
@@ -218,13 +232,12 @@ export default {
       });
 
       const properties = JSON.stringify(dataForSave);
-      console.log();
       axios({
         url: `${this.apiUrl}`,
         method: 'post',
         // headers: { 'Content-Type': 'text/plain' },
         // data: `action=edit&manager=objects&ObjectName=${this.id}&${dataForSave.join('&')}`,
-        data: `action=edit&manager=objects&ObjectName=${this.id}&properties=${properties}`,
+        data: `action=edit&manager=objects&ObjectName=${this.currentObjectName}&properties=${properties}`,
       })
         .then(() => {
           this.$nextTick(function () {

@@ -20,7 +20,16 @@ export default {
   },
   mounted () {
     this.$store.dispatch('getObjectsList');
-  }
+  },
+  watch: {
+    '$store.state.apiUrl' (v) {
+      this.$store.dispatch('getObjectsList');
+    },
+    '$store.state.currentObjectName' (v) {
+      // this.$store.dispatch('getObjectsList');
+      this.$router.push({ name: 'ObjectTable', params: { id: v}});
+    },
+  },
 };
 </script>
 
