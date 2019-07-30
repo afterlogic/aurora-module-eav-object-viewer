@@ -2,8 +2,8 @@ import Vue from 'vue';
 import VueMaterial from 'vue-material';
 import 'vue-material/dist/vue-material.min.css';
 import { ServerTable, ClientTable } from 'vue-tables-2';
-import SweetModal from 'sweet-modal-vue/src/plugin.js'
-
+// eslint-disable-next-line import/extensions
+import SweetModal from 'sweet-modal-vue/src/plugin.js';
 
 import App from './App.vue';
 import router from './router';

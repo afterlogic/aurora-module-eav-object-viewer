@@ -1,28 +1,62 @@
 <template>
   <div class="main-panel ui">
-    <h1>{{title}}</h1>
+    <h1>{{ title }}</h1>
     <div class="vuetable-pagination ui basic segment grid">
-      <select class="ui dropdown" v-model="searchField" style="width: 250px; min-height:46px;">
-        <option value="">None</option>
-        <option v-for="(field, index) in fields" :value="field" :key="index">{{field}}</option>
+      <select
+        v-model="searchField"
+        class="ui dropdown"
+        style="width: 250px; min-height:46px;"
+      >
+        <option value="">
+          None
+        </option>
+        <option
+          v-for="(field, index) in fields"
+          :key="index"
+          :value="field"
+        >
+          {{ field }}
+        </option>
       </select>
       <div class="ui icon input">
-        <input type="text" placeholder="Search" v-model="searchText" @keypress.13="onEnter"/>
+        <input
+          v-model="searchText"
+          type="text"
+          placeholder="Search"
+          @keypress.13="onEnter"
+        >
       </div>
     </div>
-    <div class="vuetable-pagination ui basic segment grid"  v-if="!loading">
-      <vuetable-pagination-info ref="paginationInfo"
-      ></vuetable-pagination-info>
+    <div
+      v-if="!loading"
+      class="vuetable-pagination ui basic segment grid"
+    >
+      <vuetable-pagination-info
+        ref="paginationInfo"
+      />
       <div class="ui icon input">
-        <input type="text" placeholder="Per page" v-model="perPageInput" @keypress.13="onEnter"/>
+        <input
+          v-model="perPageInput"
+          type="text"
+          placeholder="Per page"
+          @keypress.13="onEnter"
+        >
       </div>
-      <vuetable-pagination ref="pagination"
+      <vuetable-pagination
+        ref="pagination"
         @vuetable-pagination:change-page="onChangePage"
-      ></vuetable-pagination>
+      />
     </div>
-    <div v-if="loading">Loading...</div>
-    <div class="table-container" v-if="currentObjectName">
-      <vuetable ref="vuetable" v-show="!loading"
+    <div v-if="loading">
+      Loading...
+    </div>
+    <div
+      v-if="currentObjectName"
+      class="table-container"
+    >
+      <vuetable
+        v-show="!loading"
+        ref="vuetable"
         :api-url="apiUrl"
         :fields="tableHeaders"
         data-path="result.Values"
@@ -36,35 +70,83 @@
         @vuetable:checkbox-toggled-all="onCheckboxToggled"
         @vuetable:row-dblclicked="onRowClick"
       >
-        <template slot="actions" scope="props">
+        <template
+          slot="actions"
+          scope="props"
+        >
           <div class="table-button-container">
             <!-- <button class="ui button" @click="editRow(props.rowData, props)">Edit</button> -->
-            <button class="ui basic red button" @click="deleteRow(props.rowData)">Delete</button>
+            <button
+              class="ui basic red button"
+              @click="deleteRow(props.rowData)"
+            >
+              Delete
+            </button>
           </div>
         </template>
       </vuetable>
     </div>
-    <div class="table-button-container" v-if="selectedEntityIds.length > 0">
-      Selected items EntityId: {{selectedEntityIds}}
-      <button class="ui basic red button" @click="deleteRows">Delete</button>
+    <div
+      v-if="selectedEntityIds.length > 0"
+      class="table-button-container"
+    >
+      Selected items EntityId: {{ selectedEntityIds }}
+      <button
+        class="ui basic red button"
+        @click="deleteRows"
+      >
+        Delete
+      </button>
     </div>
-    <sweet-modal ref="modalEditor" width="800px" blocking overlay-theme="dark">
+    <sweet-modal
+      ref="modalEditor"
+      width="800px"
+      blocking
+      overlay-theme="dark"
+    >
       <div>
-        <h2>{{title}}</h2>
+        <h2>{{ title }}</h2>
         <div class="ui form">
           <div class="buttons">
-            <button class="ui primary button" @click="saveData">Save</button>
-            <button class="ui button" @click="onCancelEdit">Cancel</button>
+            <button
+              class="ui primary button"
+              @click="saveData"
+            >
+              Save
+            </button>
+            <button
+              class="ui button"
+              @click="onCancelEdit"
+            >
+              Cancel
+            </button>
           </div>
           <div class="grid stackable two column ui">
-              <div class="column field" v-for="(field,index) in editedRow" :key="index">
-                <label>{{field.name}}</label>
-                <input type="text" v-model="field.value" />
-              </div>
+            <div
+              v-for="(field,index) in editedRow"
+              :key="index"
+              class="column field"
+            >
+              <label>{{ field.name }}</label>
+              <input
+                v-model="field.value"
+                type="text"
+              >
+            </div>
           </div>
           <div class="buttons">
-            <button class="ui primary button" @click="saveData">Save</button>
-            <button class="ui button" @click="onCancelEdit">Cancel</button>
+            <button
+              class="ui primary button"
+              @click="saveData"
+            >
+              Save
+            </button>
+            <button
+              class="ui button"
+              @click="onCancelEdit"
+            >
+              Cancel
+            </button>
           </div>
         </div>
       </div>
@@ -87,7 +169,10 @@ export default {
     VuetablePaginationInfo,
   },
   props: {
-    id: String,
+    id: {
+      type: String,
+      default: '',
+    },
   },
   data() {
     return {
@@ -95,13 +180,13 @@ export default {
       fields: [],
       tableHeaders: [],
       currPage: 1,
-      // 'perPage': 10,
       perPageInput: '10',
       loading: false,
       selectedEntityIds: [],
       searchField: '',
       searchText: '',
       editedRow: [],
+      rowNumber: 0,
     };
   },
   computed: {
@@ -113,9 +198,9 @@ export default {
       return this.currentObjectName.replace('Aurora_Modules', '').replace(/_/g, ' ');
     },
     perPage() {
-      let
-        newValue = 10;
+      let newValue = 10;
       const currValue = parseInt(Number(this.perPageInput), 10);
+      // eslint-disable-next-line no-restricted-globals
       if (!isNaN(currValue) && currValue > 0) {
         newValue = currValue;
       }
@@ -124,21 +209,23 @@ export default {
     },
   },
   watch: {
-    '$store.state.currentObjectName' (v) {
+    // eslint-disable-next-line func-names
+    '$store.state.currentObjectName': function (v) {
       this.currentObjectName = v;
+      this.currPage = 1;
       this.$refs.vuetable.reload();
     },
     id(v) {
       this.$store.dispatch('setObjectsName', v);
     },
   },
-  mounted: function (params) {
+  mounted() {
     console.log('mounted this.$store.state.currentObjectName', this.$store.state.currentObjectName);
     this.currentObjectName = this.$store.state.currentObjectName;
   },
   methods: {
     getObjectData() {
-      console.log('this.currentObjectName1', this.currentObjectName);
+      console.log('this.currentObjectName', this.currentObjectName);
       this.$refs.vuetable.selectedTo = [];
       this.selectedEntityIds = [];
 
@@ -153,9 +240,14 @@ export default {
       });
       aObj.then((response) => {
         self.loading = false;
-
-        if (response.data && response.data.result && response.data.result.Fields) {
-          self.setFields(response.data.result.Fields);
+        self.rowNumber = 0;
+        if (response.data && response.data.result) {
+          if (response.data.result.Fields) {
+            self.setFields(response.data.result.Fields);
+          }
+          if (response.data.result.Values) {
+            self.rowNumber = response.data.result.Values.length;
+          }
 
           self.$nextTick(() => {
             // this is required because vuetable uses tableFields internally, not fields
@@ -172,6 +264,7 @@ export default {
       this.tableHeaders = _.concat('__checkbox', '__slot:actions', 'EntityId', fields);
     },
     deleteRow(rowData) {
+      // eslint-disable-next-line no-alert, no-restricted-globals
       if (rowData.EntityId > 0 && confirm(`The object with the EntityId: ${rowData.EntityId} will be deleted`)) {
         axios({
           url: `${this.apiUrl}`,
@@ -180,10 +273,36 @@ export default {
           data: `action=delete&ids=${rowData.EntityId}`,
         })
           .then(() => {
-            this.$nextTick(function () {
+            this.pagingCorrection(1);
+            this.$nextTick(() => {
               this.$refs.vuetable.reload();
             });
           });
+      }
+    },
+    deleteRows() {
+      const confirmText = `The objects with the following EntityIds will be deleted: ${this.selectedEntityIds.join()}`;
+      // eslint-disable-next-line no-alert, no-restricted-globals
+      if (this.selectedEntityIds.length > 0 && confirm(confirmText)) {
+        axios({
+          url: `${this.apiUrl}`,
+          method: 'post',
+          // headers: { 'Content-Type': 'text/plain' },
+          data: `action=delete&ids=${this.selectedEntityIds.join(',')}`,
+        })
+          .then(() => {
+            this.pagingCorrection(this.selectedEntityIds.length);
+            this.$nextTick(() => {
+              this.$refs.vuetable.reload();
+            });
+          });
+      }
+    },
+    pagingCorrection(itemsNumber) {
+      const pageData = this.$refs.pagination;
+      const remainingItems = this.rowNumber - itemsNumber;
+      if (remainingItems === 0 && pageData.isOnLastPage && !pageData.isOnFirstPage) {
+        this.onChangePage('prev');
       }
     },
     onCheckboxToggled() {
@@ -191,13 +310,14 @@ export default {
     },
     onPaginationData(paginationData) {
       if (paginationData) {
-        paginationData.next_page_url = `${this.apiUrl}`;
-        paginationData.prev_page_url = `${this.apiUrl}`;
-        paginationData.last_page = Math.ceil(paginationData.total / parseInt(this.perPage, 10));
-        paginationData.current_page = this.currPage;
-  
-        this.$refs.pagination.setPaginationData(paginationData);
-        this.$refs.paginationInfo.setPaginationData(paginationData);
+        const newPaginationData = _.clone(paginationData);
+        newPaginationData.next_page_url = `${this.apiUrl}`;
+        newPaginationData.prev_page_url = `${this.apiUrl}`;
+        newPaginationData.last_page = Math.ceil(paginationData.total / parseInt(this.perPage, 10));
+        newPaginationData.current_page = this.currPage;
+
+        this.$refs.pagination.setPaginationData(newPaginationData);
+        this.$refs.paginationInfo.setPaginationData(newPaginationData);
       }
     },
     onChangePage(page) {
@@ -209,21 +329,6 @@ export default {
         this.currPage = page;
       }
       this.$refs.vuetable.changePage(page);
-    },
-    deleteRows() {
-      if (this.selectedEntityIds.length > 0 && confirm(`The objects with the following EntityIds will be deleted: ${this.selectedEntityIds.join()}`)) {
-        axios({
-          url: `${this.apiUrl}`,
-          method: 'post',
-          // headers: { 'Content-Type': 'text/plain' },
-          data: `action=delete&ids=${this.selectedEntityIds.join(',')}`,
-        })
-          .then((response) => {
-            this.$nextTick(function () {
-              this.$refs.vuetable.reload();
-            });
-          });
-      }
     },
     saveData() {
       const dataForSave = {};
@@ -240,7 +345,7 @@ export default {
         data: `action=edit&manager=objects&ObjectName=${this.currentObjectName}&properties=${properties}`,
       })
         .then(() => {
-          this.$nextTick(function () {
+          this.$nextTick(() => {
             this.editedRow = [];
             this.$refs.vuetable.reload();
             this.$refs.modalEditor.close();
@@ -267,6 +372,7 @@ export default {
       if (parseInt(Number(this.perPageInput), 10) !== this.perPage) {
         this.perPageInput = this.perPage;
       }
+      this.currPage = 1;
       this.$refs.vuetable.reload();
     },
   },

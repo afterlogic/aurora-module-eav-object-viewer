@@ -1,40 +1,42 @@
 <template>
-    <vuetable ref="vuetable"
-              :api-mode="false"
-              :data=gridData
-              :fields="fields"
+  <vuetable
+    ref="vuetable"
+    :api-mode="false"
+    :data="gridData"
+    :fields="fields"
+  >
+    <template
+      slot="inputField"
+      scope="props"
     >
-
-        <template slot="inputField" scope="props">
-            <div class="custom-actions">
-                <input @click="function () {props;}" />
-            </div>
-        </template>
-
-    </vuetable>
+      <div class="custom-actions">
+        <input @click="function () {props;}">
+      </div>
+    </template>
+  </vuetable>
 </template>
 <script>
-    import Vuetable from 'vuetable-2'
+import Vuetable from 'vuetable-2';
 
-    export default {
-        components: {
-            Vuetable
+export default {
+  components: {
+    Vuetable,
+  },
+  data() {
+    return {
+      gridData: [
+        {
+          id: 1,
         },
-        data() {
-            return {
-                gridData : [
-                    {
-                    id:1,
-                    }
-                ],
-                fields: [
-                    {
-                        name: '__slot:inputField',
-                        title: 'Input Field'
-                    }
-                ]
-            }
-        }
+      ],
+      fields: [
+        {
+          name: '__slot:inputField',
+          title: 'Input Field',
+        },
+      ],
+    };
+  },
 
-    }
+};
 </script>

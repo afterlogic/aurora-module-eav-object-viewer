@@ -1,22 +1,30 @@
 <template>
   <div class="list">
     <div class="ui input fluid">
-      <input v-model="apiUrlInput" type="text" @keypress.13="onApiUrlEnter" />
+      <input
+        v-model="apiUrlInput"
+        type="text"
+        @keypress.13="onApiUrlEnter"
+      >
     </div>
     <ul>
-      <li v-for="item in items" @click="openList(item)" :class="{'selected': currObject === item.value}">{{ item.name }}</li>
+      <li
+        v-for="(item, index) in items"
+        :key="index"
+        :class="{'selected': currObject === item.value}"
+        @click="openList(item)"
+      >
+        {{ item.name }}
+      </li>
     </ul>
   </div>
 </template>
 
 <script>
-import _ from "lodash"
+import _ from 'lodash';
 
 export default {
   name: 'ObjectList',
-  props: {
-    msg: String
-  },
   data() {
     return {
       apiUrlInput: '',
@@ -25,35 +33,37 @@ export default {
     };
   },
   watch: {
-    '$store.state.currentObjectName' (v) {
+    // eslint-disable-next-line func-names
+    '$store.state.currentObjectName': function (v) {
+      console.log(this);
       this.currObject = v;
     },
-    '$store.state.objectsList' (v) {
+    // eslint-disable-next-line func-names
+    '$store.state.objectsList': function (v) {
       this.createObjectList(v);
     },
   },
-  mounted: function (params) {
+  mounted() {
     this.apiUrlInput = this.$store.state.apiUrl;
     this.currObject = this.$store.state.currentObjectName;
   },
   methods: {
-    createObjectList (v) {
+    createObjectList(v) {
       if (v) {
-        let list = [];
+        const list = [];
         _.each(v, (item) => {
           list.push({
-            'name': item.replace('Aurora_Modules', '').replace(/_/g, ' '),
-            'value': item
+            name: item.replace('Aurora_Modules', '').replace(/_/g, ' '),
+            value: item,
           });
-        })
-
-        this.items = list
+        });
+        this.items = list;
       }
     },
-    openList (item) {
-      this.$router.push({ name: 'ObjectTable', params: { id: item.value}});
+    openList(item) {
+      this.$router.push({ name: 'ObjectTable', params: { id: item.value } });
     },
-    onApiUrlEnter () {
+    onApiUrlEnter() {
       this.$store.dispatch('setAppUrl', this.apiUrlInput);
     },
   },

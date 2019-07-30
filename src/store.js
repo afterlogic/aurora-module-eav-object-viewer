@@ -46,7 +46,7 @@ export default new Vuex.Store({
           }
         })
         .catch((err) => {
-          // handleErr(err, this._vm);
+          console.log(err);
         });
     },
     setObjectsName({ commit }, data) {

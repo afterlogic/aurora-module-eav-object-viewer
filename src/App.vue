@@ -2,33 +2,29 @@
   <div id="app">
     <ObjectList />
     <router-view />
-    <!-- <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div> -->
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import ObjectList from "@/components/ObjectList.vue"
+import ObjectList from '@/components/ObjectList.vue';
 
 export default {
-  name: "home",
+  name: 'Home',
   components: {
     ObjectList,
   },
-  mounted () {
-    this.$store.dispatch('getObjectsList');
-  },
   watch: {
-    '$store.state.apiUrl' (v) {
+    '$store.state.apiUrl': function (v) {
       this.$store.dispatch('getObjectsList');
     },
-    '$store.state.currentObjectName' (v) {
+    '$store.state.currentObjectName': function (v) {
       // this.$store.dispatch('getObjectsList');
-      this.$router.push({ name: 'ObjectTable', params: { id: v}});
+      this.$router.push({ name: 'ObjectTable', params: { id: v } });
     },
+  },
+  mounted() {
+    this.$store.dispatch('getObjectsList');
   },
 };
 </script>
