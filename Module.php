@@ -196,24 +196,17 @@ class Module extends \Aurora\System\Module\AbstractModule
 									break;
 							}
 						}
+						
+						$aItems = (new \Aurora\System\EAV\Query($sObjectType))
+							->where($aFilters)
+							->offset($iOffset)
+							->limit($iLimit)
+							->exec();
 
-						// var_dump(	$aFilters);
-						// exit;
-						
-						$aItems = $oManagerApi->getEntities(
-							$sObjectType, 
-							array(), 
-							$iOffset, 
-							$iLimit, 
-							$aFilters,
-							array(), 
-							\Aurora\System\Enums\SortOrder::ASC
-						);
-						
-						$iItemsCount = $oManagerApi->getEntitiesCount(
-							$sObjectType, 
-							$aFilters
-						);
+						$iItemsCount = (new \Aurora\System\EAV\Query($sObjectType))
+							->where($aFilters)
+							->count()
+							->exec();
 
 						$aAttributes = $oEntity->getAttributes();
 
@@ -236,7 +229,7 @@ class Module extends \Aurora\System\Module\AbstractModule
 								{
 									if (isset($oItem->{$sAttribute}))
 									{
-										if ($sObjectType === 'Aurora\Modules\StandardAuth\Classes\Account') 
+										if ($sObjectType === \Aurora\Modules\StandardAuth\Classes\Account::class) 
 										{
 											$aResultItem[$sAttribute] = htmlspecialchars($oItem->{$sAttribute});
 										}
