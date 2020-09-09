@@ -78,6 +78,17 @@ class Module extends \Aurora\System\Module\AbstractModule
 		  exit(0);
 		}
 		
+		$bIsAdmin = false;
+		try
+		{
+			\Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::SuperAdmin);
+			$bIsAdmin = true;
+		}
+		catch (\Aurora\System\Exceptions\ApiException $oEcxeption) {}
+		
+		if (!$bIsAdmin) {
+			exit;
+		}
 		$oManagerApi = new \Aurora\System\Managers\Eav();
 		if (isset($_POST['action']))
 		{
@@ -235,12 +246,12 @@ class Module extends \Aurora\System\Module\AbstractModule
 										}
 										else
 										{
-											$aResultItem[$sAttribute] = $oItem->{$sAttribute};
+											$aResultItem[$sAttribute] = htmlspecialchars($oItem->{$sAttribute});
 										}
 									}
 									else
 									{
-										$aResultItem[$sAttribute] = $oAttribute->Value;
+										$aResultItem[$sAttribute] = htmlspecialchars($oAttribute->Value);
 									}
 									
 								}
