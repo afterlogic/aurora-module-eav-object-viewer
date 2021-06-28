@@ -202,6 +202,9 @@ class Module extends \Aurora\System\Module\AbstractModule
 								case 'int':
 									$aFilters = [$sSearchField => [(int)$_POST['searchText'], '=']];
 									break;
+								case 'bigint':
+									$aFilters = [$sSearchField => [$_POST['searchText'], '=']];
+									break;
 								case 'bool':
 									$aFilters = [$sSearchField => [(bool)$_POST['searchText'], '=']];
 									break;
